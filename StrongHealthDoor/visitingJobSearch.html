@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>来访求职者</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" type="text/css" href="css/bus.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link rel="icon" type="text/css" href="favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="css/doctorMsg.css" />
+		<style type="text/css">
+			.exrt {
+			     float: none; 
+			    width: 880px;
+			    background-color: #fff;
+			    margin: 0 auto;
+			}
+			.footvjs{
+				position: fixed;
+				bottom: 0;
+				left: 0;
+			}
+			.btn{
+				padding: 0 6px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<iframe class="headif" scrolling="no" src="head.html" width="100%" height="55px"></iframe>
+		<div class="container clearfix">
+			<div id="content">
+				<!--我的简历-->
+				<div class="exrt" id="myResume">
+					<h4><span>来访求职者列表</span></h4>
+					<!--发布第一条-->
+					<div class="bs-example" data-example-id="simple-table">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>姓名</th>
+									<th>职位</th>
+									<th>电话</th>
+									<th>工作经验</th>
+									<th>薪资要求</th>
+									<th>全职/兼职</th>
+									<th>是否邀请</th>
+									<th>编辑</th>
+								</tr>
+							</thead>
+							<tbody class="timelook">
+								<tr>
+									<th scope="row">王某</th>
+									<td>内科医生</td>
+									<td>13945622546</td>
+									<td>3-5年</td>
+									<td>5000-6000/月</td>
+									<th class="full-part">全职</th>
+									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
+									<th class="text-danger deletem">删除</th>
+								</tr>
+								<tr>
+									<th scope="row">王某</th>
+									<td>内科医生</td>
+									<td>13945622546</td>
+									<td>3-5年</td>
+									<td>5000-6000/月</td>
+									<th class="full-part">兼职</th>
+									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
+									<th class="text-danger deletem">删除</th>
+								</tr>
+								<tr>
+									<th scope="row">王某</th>
+									<td>内科医生</td>
+									<td>13945622546</td>
+									<td>3-5年</td>
+									<td>5000-6000/月</td>
+									<th class="full-part">全职</th>
+									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
+									<th class="text-danger deletem">删除</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--面试邀请模态框弹窗-->
+		<div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modede">
+			<div class="modal-dialog modal-sm" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel1">面试信息</h4>
+					</div>
+					<div class="modal-body">
+						投递成功
+					</div>
+				</div>
+			</div>
+		</div>
+		<iframe class="footvjs" src="foot.html" width="100%" height="170px" scrolling="no"></iframe>
+		<script src="js/jquery-3.3.1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="layui/layui.js" charset="utf-8"></script>
+		<script src="js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			//删除我的简历信息
+			$(".deletem").click(function() {
+				
+				if(confirm("您确定删除吗？")){
+					$(this).parent("tr").remove();
+				}else{
+					return false;
+				}
+				
+			})
+			//个人简历列表信息跳转详情
+			$(".timelook tr").click(function() {
+				var job = $(this).children(".full-part").text();
+				if(job == "全职") {
+					location.href = "fulltimeLook.html"
+				} else if(job == "兼职") {
+					location.href = "parttimeLook.html"
+				}
+			})
+			
+			//发送邀请
+			$(".send-invitation").click(function(event){
+				event.stopPropagation();
+				if(confirm("是否发送邀请")){
+					$(this).children("button").attr("disabled",true);
+					alert("发送成功")
+				}else{
+					
+				}
+			})
+		
+		</script>
+	</body>
+
+</html>
