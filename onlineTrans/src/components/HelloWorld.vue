@@ -13,5 +13,7 @@ export default {
 
 
 <style scoped>
-
+	.hello{
+		font-size: 50px;
+	}
 </style>

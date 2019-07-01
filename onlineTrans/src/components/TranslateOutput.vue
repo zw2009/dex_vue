@@ -1,17 +1,20 @@
 <template>
-  <div class="transoutput">
-    transoutput
+  	<div class="translateoutput">
+			<h2>{{transtedText}}</h2>  	
     </div>
 </template>
 
 <script>
 export default {
-  name: 'transoutput',
+  name: 'translateoutput',
+  props:["transtedText"]
+  		
   
-}
+  }
+
 </script>
 
 
-<style scoped>
+<style>
 
 </style>
