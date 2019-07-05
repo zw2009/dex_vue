@@ -32,16 +32,15 @@
 								</form>
 							</div>
 							<div class="card-footer text-muted">
-								<a href="index.html" class="mr-2"><span class="glyphicon glyphicon-home"></span> 网站首页 </a>
-								<a href="register.html" class="mr-2"><span class="glyphicon glyphicon-plus"></span> 注册帐号</a>
-								<a href="findpwd.html" class="mr-2"><span class="glyphicon glyphicon-search"></span> 找回密码</a>
+								<router-link to="/"><span class="glyphicon glyphicon-home"></span> 网站首页</router-link>
+								<router-link to="/register"><span class="glyphicon glyphicon-plus"></span> 注册帐号</router-link>
+								<router-link to="/findpwd"><span class="glyphicon glyphicon-search"></span>找回密码</router-link>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<router-link to="/">返回主页</router-link>
 	</div>
 </template>
 
@@ -93,5 +92,12 @@ form {
 
 .container {
 	width: 500px !important;
+	margin: 0 auto;
+}
+.btn{
+	padding: 5px 15px;
+}
+.form-group{
+	margin-bottom:14px;	
 }
 </style>

@@ -23,7 +23,7 @@
 		data(){
 			return {
 				abous:[
-					{id:1,title:"关于我们",to:"about"},
+					{id:1,title:"关于我们",to:"abouthome"},
 					{id:2,title:"问题反馈",to:""},
 					{id:3,title:"帮助中心",to:""}
 				]
@@ -33,11 +33,11 @@
 </script>
 
 <style scoped="">
-* {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
+/*footer{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+}*/
 
 .foot-left li {
 	cursor: pointer;

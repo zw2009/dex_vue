@@ -18,7 +18,6 @@
 				</ul>
 			</nav>
 		</header>
-
 	</div>
 </template>
 
@@ -36,7 +35,7 @@
 						title: "医护学习"
 					},
 					{
-						to: "doctor_care",
+						to: "doctorcare",
 						title: "医护人才"
 					}
 				],
@@ -55,7 +54,7 @@
 		},
 		watch: {
 			'$route' (to, from) {
-				if(to.name == 'register' || to.name == 'login') {
+				if(to.name == 'register' || to.name == 'login' || to.name == "findpwd") {
 					this.flag = false;
 				} else {
 					this.flag = true;

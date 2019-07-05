@@ -2,37 +2,45 @@
 	<div id="app">
 		<headnav></headnav>
 		<router-view></router-view>
+		<foot v-if="flag"></foot>
 	</div>
 </template>
 
 <script>
 	import health from '@/components/Health'
 	import headnav from '@/components/Head'
-
+	import foot from '@/components/Foot'
+	
 	export default {
 		name: 'App',
 		components: {
 			health,
-			headnav
-		}
+			headnav,
+			foot
+		},
+		data(){
+			return {
+				flag:true
+			}
+		},
+		watch: {
+			'$route' (to, from) {
+				if(to.name == 'register' || to.name == 'login' || to.name == "findpwd") {
+					this.flag = false;
+				} else {
+					this.flag = true;
+				}
+			}
+		},
 	}
 </script>
 
 <style>
-	#app {
-		font-family: 'Avenir', Helvetica, Arial, sans-serif;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-		text-align: center;
-		color: #2c3e50;
-	}
-	
 	* {
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
-	
 	ul,
 	h3 {
 		margin: 0;
@@ -43,7 +51,10 @@
 		text-decoration: none;
 		font-size: 13px;
 	}
-	
+	a:hover {
+		text-decoration: none;
+		font-size: 13px;
+	}
 	.textover {
 		overflow: hidden;
 		text-overflow: ellipsis;

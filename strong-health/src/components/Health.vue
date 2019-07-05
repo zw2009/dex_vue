@@ -1,12 +1,11 @@
 <template>
-	<div class="health">
-
+	<div class="healthtitle">
 		<div class="container">
 			<article class="health clearfix">
 				<section class="health-left">
 					<ul>
 						<li v-for="v in news">
-							<a>{{v.title}}</a>
+							<a  @click="toLink(v.to,v.id)">{{v.title}}</a>
 						</li>
 					</ul>
 				</section>
@@ -17,7 +16,7 @@
 						<div class="pull-left newsleft">
 							<ul>
 								<li v-for="v in newlists">
-									<h3 class="textover"><a href="healthDetails.html" target="_blank">{{v.title}}</a></h3>
+									<h3 class="textover"><router-link to="healthdetails">{{v.title}}</router-link></h3>
 									<p class="textover">{{v.content}}</p>
 								</li>
 							</ul>
@@ -80,31 +79,38 @@
 				</section>
 			</article>
 		</div>
-		<foot></foot>
 	</div>
+	
 </template>
 
 <script>
 	import foot from "@/components/Foot"
 	export default {
 		name: 'health',
+		components: {
+			foot
+		},
 		data() {
 			return {
 				news: [{
+						id:1,
 						title: "新闻资讯",
-						to: "xinwenzixun"
+						to: "healthlist"
 					},
 					{
+						id:2,
 						title: "疾病诊疗",
-						to: "xinwenzixun"
+						to: "healthlist"
 					},
 					{
+						id:3,
 						title: "生活养生",
-						to: "xinwenzixun"
+						to: "healthlist"
 					},
 					{
+						id:4,
 						title: "行业新闻",
-						to: "xinwenzixun"
+						to: "healthlist"
 					},
 				],
 				newlists: [{
@@ -191,8 +197,14 @@
 				nleft: 0
 			}
 		},
-		components: {
-			foot
+		
+		created(){
+			this.$axios.get("../../static/json/video.json").then((data)=>{
+				console.log(data.data.data.slice(0,6))
+			});
+			this.$axios.get("../../static/json/pictext.json").then((data)=>{
+				console.log(data)
+			})
 		},
 		methods: {
 			clickLeft() {
@@ -206,14 +218,22 @@
 				if(this.nleft == -2224) {
 					this.nleft = 0;
 				}
+			},
+			toLink(route,id){
+				this.$router.push({
+					name:route,
+					query:{
+						id:id
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.health {
-		margin-top: 50px;
+	.healthtitle {
+		margin-top:55px;
 	}
 	/*轮播*/
 	
@@ -538,6 +558,7 @@
 	.column_right ul li a {
 		color: #788082;
 		font-size: 16px;
+		cursor: pointer;
 	}
 	
 	#life {

@@ -48,9 +48,9 @@
 										<a class="btn btn-success btn-sm" id="register">个人注册</a>
 									</div>
 									<div class="card-footer text-muted">
-										<a href="index.html" class="mr-2"><span class="glyphicon glyphicon-home"></span>网站首页 </a>
-										<a href="login.html" class="mr-2"><span class="glyphicon glyphicon-plus"></span>登录帐号</a>
-										<a href="findpwd.html" class="mr-2"><span class="glyphicon glyphicon-search"></span>找回密码</a>
+										<router-link to="/"><span class="glyphicon glyphicon-home"></span>网站首页</router-link>
+										<router-link to="/login"><span class="glyphicon glyphicon-plus"></span>登录帐号</router-link>
+										<router-link to="/findpwd"><span class="glyphicon glyphicon-search"></span>找回密码</router-link>
 									</div>
 								</div>
 							</div>
@@ -59,7 +59,6 @@
 				</div>
 			</div>
 		</div>
-		<router-link to="/">返回主页</router-link>
 	</div>
 </template>
 
@@ -115,10 +114,16 @@
 
 .container {
 	width: 500px;
+	margin: 0 auto;
 }
 #register1{
 	background: #337ab7;
 	border-color: #337ab7;
 }
-
+.form-group{
+	margin-bottom: 14px;
+}
+.btn{
+	padding: 5px 10px;
+}
 </style>
