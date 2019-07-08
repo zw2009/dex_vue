@@ -1,7 +1,7 @@
 <template>
 	<div class="full-time">
 		<div class="container">
-			<h2>全职简历创建中...</h2>
+			<h2>全职简历编辑中...</h2>
 			<div class="from-container">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-form-item label="简历名称" prop="compname" required>
@@ -58,13 +58,6 @@
 							<el-checkbox label="房补" name="type"></el-checkbox>
 						</el-checkbox-group>
 					</el-form-item>
-					<el-form-item label="时间要求" prop="type1" required v-if="jian">
-						<el-checkbox-group v-model="ruleForm.type1" size="medium" id="chekgroud">
-							<el-checkbox-button v-for="t in types" :label="t" :key="t">{{t}}</el-checkbox-button>
-						</el-checkbox-group>
-					</el-form-item>
-					
-					
 					<el-form-item label="工作区域" prop="area" required>
 						<el-cascader :options="options" v-model="ruleForm.area"></el-cascader>
 						<el-input v-model="ruleForm.address" placeholder="请输入详细地址" style="width: 71%;"></el-input>
@@ -74,7 +67,7 @@
 						<el-input type="textarea" v-model="ruleForm.content"></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+						<el-button type="primary" @click="submitForm('ruleForm')">编辑完成</el-button>
 						<el-button @click="resetForm('ruleForm')">重置</el-button>
 						<el-button @click="caaback">返回</el-button>
 					</el-form-item>
@@ -86,14 +79,9 @@
 </template>
 
 <script>
-	const Types = ['星期一上午', '星期二上午', '星期三上午', '星期四上午', '星期五上午', '星期六上午', '星期日上午',
-		'星期一下午', '星期二下午', '星期三下午', '星期四下午', '星期五下午', '星期六下午', '星期日下午',
-	];
 	export default {
 		data() {
 			return {
-				
-				types: Types,
 				quan: false,
 				jian: false,
 				options: [{
@@ -233,29 +221,32 @@
 </script>
 
 <style scoped="">
-	#chekgroud label:nth-child(8) {
-		border-left: 1px solid #DCDFE6 !important;
-		border-top-left-radius: 5px;
-		border-bottom-left-radius: 5px;
-	}
-	
-	.full-time {
-		margin-top: 50px;
-	}
-	
-	.container h2 {
-		background: #ccc;
-		margin: 0;
-		padding: 15px;
-		line-height: 22px;
-		border-left: 5px solid #409EFF;
-		border-radius: 0 2px 2px 0;
-		background-color: #f2f2f2;
-	}
-	
-	.from-container {
-		padding-top: 20px;
-		width: 880px;
-		margin: 0 auto;
-	}
+.el-form-item__error{
+	padding-top: 0px;
+}
+.el-form-item {
+    margin-bottom: 15px;
+}
+#chekgroud label:nth-child(8) {
+	border-left: 1px solid #DCDFE6 !important;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+.full-time {
+	margin-top: 42px;
+}
+.container h2 {
+	background: #ccc;
+	margin: 0;
+	padding: 15px;
+	line-height: 22px;
+	border-left: 5px solid #409EFF;
+	border-radius: 0 2px 2px 0;
+	background-color: #f2f2f2;
+}
+.from-container {
+	padding-top: 9px;
+	width: 880px;
+	margin: 0 auto;
+}
 </style>

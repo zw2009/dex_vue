@@ -244,30 +244,33 @@
 	}
 </script>
 
-<style scoped="">
-	#chekgroud label:nth-child(8) {
-		border-left: 1px solid #DCDFE6 !important;
-		border-top-left-radius: 5px;
-		border-bottom-left-radius: 5px;
-	}
-	
-	.publish-recruit {
-		margin-top: 50px;
-	}
-	
-	.container h2 {
-		background: #ccc;
-		margin: 0;
-		padding: 15px;
-		line-height: 22px;
-		border-left: 5px solid #409EFF;
-		border-radius: 0 2px 2px 0;
-		background-color: #f2f2f2;
-	}
-	
-	.from-container {
-		padding-top: 20px;
-		width: 880px;
-		margin: 0 auto;
-	}
+<style scoped="">/
+.el-form-item {
+    margin-bottom: 13px;
+}
+#chekgroud label:nth-child(8) {
+	border-left: 1px solid #DCDFE6 !important;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.publish-recruit {
+	margin-top:42px;
+}
+
+.container h2 {
+	background: #ccc;
+	margin: 0;
+	padding: 15px;
+	line-height: 22px;
+	border-left: 5px solid #409EFF;
+	border-radius: 0 2px 2px 0;
+	background-color: #f2f2f2;
+}
+
+.from-container {
+	padding-top: 9px;
+	width: 880px;
+	margin: 0 auto;
+}
 </style>

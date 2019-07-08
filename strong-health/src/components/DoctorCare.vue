@@ -3,7 +3,7 @@
 		<!--右边悬浮-->
 		<ul class="xianfu">
 			<li>
-				<a href="doctorMsg.html" target="_blank">个人中心 <i>1</i></a>
+				<router-link :to="{name:'doctormsg'}">个人中心 <i>1</i></router-link>
 			</li>
 			</li>
 		</ul>

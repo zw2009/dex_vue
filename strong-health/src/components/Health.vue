@@ -5,7 +5,7 @@
 				<section class="health-left">
 					<ul>
 						<li v-for="v in news">
-							<a  @click="toLink(v.to,v.id)">{{v.title}}</a>
+							<a  @click="toLink(v.to,v.id)">{{v.title1}}</a>
 						</li>
 					</ul>
 				</section>
@@ -17,7 +17,7 @@
 							<ul>
 								<li v-for="v in newlists">
 									<h3 class="textover"><router-link to="healthdetails">{{v.title}}</router-link></h3>
-									<p class="textover">{{v.content}}</p>
+									<p class="textover">{{v.subtitle}}</p>
 								</li>
 							</ul>
 						</div>
@@ -26,8 +26,8 @@
 							<div class="block">
 								<span class="demonstration" style="width: 580px;display: block;"></span>
 								<el-carousel trigger="click" height="300px">
-									<el-carousel-item v-for="item in 3" :key="item">
-										<h3>{{ item }}标题</h3>
+									<el-carousel-item v-for="item in banners" :key="item">
+										<h3>{{ item.title }}标题</h3>
 									</el-carousel-item>
 								</el-carousel>
 							</div>
@@ -113,23 +113,8 @@
 						to: "healthlist"
 					},
 				],
-				newlists: [{
-						title: "从阵痛到宝宝降临 宝妈要经历这些过程从阵痛到宝宝降临从",
-						content: "到了医院宝妈会经历怎样的过程？宝妈需要做哪些努力？如何配合？宝妈需要做哪些努力宝妈需要做哪些努力"
-					},
-					{
-						title: "从阵痛到宝宝降临 宝妈要经历这些过程从阵痛到宝宝降临从",
-						content: "到了医院宝妈会经历怎样的过程？宝妈需要做哪些努力？如何配合？宝妈需要做哪些努力宝妈需要做哪些努力"
-					},
-					{
-						title: "从阵痛到宝宝降临 宝妈要经历这些过程从阵痛到宝宝降临从",
-						content: "到了医院宝妈会经历怎样的过程？宝妈需要做哪些努力？如何配合？宝妈需要做哪些努力宝妈需要做哪些努力"
-					},
-					{
-						title: "从阵痛到宝宝降临 宝妈要经历这些过程从阵痛到宝宝降临从",
-						content: "到了医院宝妈会经历怎样的过程？宝妈需要做哪些努力？如何配合？宝妈需要做哪些努力宝妈需要做哪些努力"
-					}
-				],
+				newlists: [ ],
+				banners:[ ],
 				diseaseList: [{
 						src: "img/health/gaoxuezhi.png",
 						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
@@ -199,9 +184,17 @@
 		},
 		
 		created(){
-			this.$axios.get("../../static/json/video.json").then((data)=>{
-				console.log(data.data.data.slice(0,6))
-			});
+			//新闻资讯左边
+			this.$axios.get("../../static/json/health/news.json")
+			.then((res)=>{
+				var res= res.data.data;
+				var data = res.slice(0,4);
+				var data2 = res.slice(5,8);
+				this.newlists = data.reverse();
+				this.banners = data2.reverse();
+				console.log(this.banners)
+			})
+			
 			this.$axios.get("../../static/json/pictext.json").then((data)=>{
 				console.log(data)
 			})

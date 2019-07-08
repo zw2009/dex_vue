@@ -4,11 +4,20 @@ import Router from 'vue-router'
 import register from '@/components/Register'
 import login from '@/components/Login'
 import findpwd from '@/components/Findpwd'
+//健康资讯
+import health from '@/components/Health'
+import healthlist from '@/components/health/HealthList'
+import healthdetails from '@/components/health/HealthDetails'
+//健康资讯二级路由
+	import newslist from '@/components/health/NewsList'
+	import diseaselist from '@/components/health/DiseaseList'
+	import liftlist from '@/components/health/LiftList'
 //医护学习
 import doctor from '@/components/Doctor'
 import doctorvideo from '@/components/doctor/DoctorVideo'
 import doctorvideoDetails from '@/components/doctor/DoctorVideoDetails'
 import doctorpro from '@/components/doctor/Doctorpro'
+import doctordestails from '@/components/doctor/DoctorDestails'
 //医护人才
 import doctorcare from '@/components/DoctorCare'
 import publishrecruit from '@/components/doctorcare/PublishRecruit'
@@ -19,17 +28,17 @@ import parttimelook from '@/components/doctorcare/PartTimeLook'
 	//医护人才二级路由
 	import findfulltime from '@/components/doctorcare/FindFullTime'
 	import findparttime from '@/components/doctorcare/FindPartTime'
+//个人中心
+import doctormsg from '@/components/personal/DoctorMsg'
+import myrelease from '@/components/personal/MyRelease'
+import invitationinterview from '@/components/personal/InvitationInterview'
+import myapplication from '@/components/personal/MyApplication'
+import reaumelist from '@/components/personal/ResumeList'  
+import visitingjobsearch from '@/components/personal/VisitingJobSearch'  //来访求职者列表页visitingJobSearch
 //关于我们
 import about from '@/components/about/About'
 import abouthome from '@/components/about/AboutHome'
-//健康资讯
-import health from '@/components/Health'
-import healthlist from '@/components/health/HealthList'
-import healthdetails from '@/components/health/HealthDetails'
-//健康资讯二级路由
-import newslist from '@/components/health/NewsList'
-import diseaselist from '@/components/health/DiseaseList'
-import liftlist from '@/components/health/LiftList'
+
 
 
 Vue.use(Router)
@@ -123,6 +132,14 @@ export default new Router({
 			}
 		},
 		{
+			path:'/doctordestails',
+			component:doctordestails,
+			name:'doctordestails',
+			meta:{
+				title:'图文详情'
+			}
+		},
+		{
 			path: '/doctorcare',
 			component: doctorcare,
 			name:"doctorcare",
@@ -134,14 +151,43 @@ export default new Router({
 				{
 				path:'/findfulltime',
 				component:findfulltime,
-				name:'findfulltime'
+				name:'findfulltime',
+				meta:{
+					title:'医护人才'
+				}
 			},
 			{
 				path:'/findparttime',
 				component:findparttime,
-				name:'findparttime'
+				name:'findparttime',
+				meta:{
+					title:'医护人才'
+				}
 			}
 			]
+		},
+		{
+			path: '/doctormsg',
+			component: doctormsg,
+			name:"doctormsg",
+			meta:{ 
+				title:"个人中心"
+			},
+			redirect:'/doctormsg/myrelease',
+			children:[
+				{path:'/doctormsg/myrelease',component:myrelease,name:'myrelease'},
+				{path:'/doctormsg/invitationinterview',component:invitationinterview,name:'invitationinterview'},
+				{path:'/doctormsg/myapplication',component:myapplication,name:'myapplication'},
+				{path:'/doctormsg/reaumelist',component:reaumelist,name:'reaumelist'}
+			]
+		},
+		{
+			path:'/visitingjobsearch',
+			component:visitingjobsearch,
+			name:'visitingjobsearch',
+			meta:{
+				title:'求职者列表'
+			}
 		},
 		{
 			path: '/publishrecruit',
