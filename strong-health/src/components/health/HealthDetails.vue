@@ -1,21 +1,86 @@
 <template>
 	<div class="healthdetails">
-		<div class="banner3">
-				
-			</div>
+		<div class="banner3"></div>
 			<div class="qq_conent container">
-				<h1>田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错过</h1>
-				<div class="content-article">
-					12312312313
+				<h1>{{blog.title}}</h1>
+				<div class="content-article" v-html="blog.content">
+					
 				</div>
-		</div>
+			</div>
 	</div>
 </template>
 
 <script>
+	export default {
+		data(){
+			return {
+				nid:this.$route.query.nid,
+				did:this.$route.query.did,
+				lid:this.$route.query.lid,
+				lnid:this.$route.query.lnid,
+				blog:{}
+			}
+		},
+		created(){
+			this.$axios.get('../../static/json/health/news.json')
+			.then((res)=>{
+				var res = res.data.data;
+				res.forEach((v,i)=>{
+					if(this.nid == v.id){
+						this.blog = v ;
+						//console.log(this.blog)
+					}
+				})
+			});
+			this.$axios.get('../../static/json/health/disease.json')
+			.then((res)=>{
+				var res = res.data.data;
+				res.forEach((v,i)=>{
+					if(this.did == v.id){
+						this.blog = v ;
+						//console.log(this.blog)
+					}
+				})
+			});
+			this.$axios.get('../../static/json/health/life.json')
+			.then((res)=>{
+				var res = res.data.data;
+				res.forEach((v,i)=>{
+					if(this.lid == v.id){
+						this.blog = v ;
+						//console.log(this.blog)
+					}
+				})
+			});
+			this.$axios.get('../../static/json/health/lineNews.json')
+			.then((res)=>{
+				var res = res.data.data;
+				res.forEach((v,i)=>{
+					if(this.lnid == v.id){
+						this.blog = v ;
+						//console.log(this.blog)
+					}
+				})
+			});
+			
+		},
+		updated(){
+			
+		}
+	}
 </script>
 
 <style scoped="">
+>>>.content-article p{
+	text-indent: 2em;
+	position: relative;
+}
+>>>.content-article p img{
+	width: 600px;
+	height: 500px;
+	display: block;
+	margin: 0 auto !important;
+}
 	.qq_conent {
 	padding-bottom: 50px;
 	width: 900px;

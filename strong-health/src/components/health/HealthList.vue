@@ -57,17 +57,15 @@
 				</div>
 			</div>
 		</div>
-		<foot></foot>
 	</div>
 </template>
 	
 
 <script>
-	import foot from '@/components/Foot'
 	import newslist from "@/components/health/NewsList"
 	export default{
 		components:{
-			foot,newslist
+			newslist
 		},
 		data(){
 			return {

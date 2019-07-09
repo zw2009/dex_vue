@@ -5,7 +5,7 @@
 				<section class="health-left">
 					<ul>
 						<li v-for="v in news">
-							<a  @click="toLink(v.to,v.id)">{{v.title1}}</a>
+							<a  @click="toLink(v.to,v.id)">{{v.title}}</a>
 						</li>
 					</ul>
 				</section>
@@ -16,8 +16,10 @@
 						<div class="pull-left newsleft">
 							<ul>
 								<li v-for="v in newlists">
-									<h3 class="textover"><router-link to="healthdetails">{{v.title}}</router-link></h3>
-									<p class="textover">{{v.subtitle}}</p>
+									<div @click="todetails(v.id,0,0)">
+										<h3 class="textover">{{v.title}}</h3>
+										<p class="textover">{{v.subtitle}}</p>
+									</div>
 								</li>
 							</ul>
 						</div>
@@ -26,8 +28,9 @@
 							<div class="block">
 								<span class="demonstration" style="width: 580px;display: block;"></span>
 								<el-carousel trigger="click" height="300px">
-									<el-carousel-item v-for="item in banners" :key="item">
+									<el-carousel-item v-for="item in banners" :key="item.img">
 										<h3>{{ item.title }}标题</h3>
+										<div @click="todetails(item.id,0)"><img :src="item.img" alt="" width="100%" height="300" /></div>
 									</el-carousel-item>
 								</el-carousel>
 							</div>
@@ -35,13 +38,13 @@
 					</div>
 					<!--疾病诊疗-->
 					<div class="one-wrap twonew" id="disease">
-						<h3>疾病诊疗 <i></i><a href="healthLists.html" target="_blank">更多</a></h3>
+						<h3>疾病诊疗 <i></i><router-link :to="{name:'diseaselist'}">更多</router-link></h3>
 						<div class="newlist">
 							<!--渲染时只允许遍历8条数据显示宽度已定-->
 							<ul id="inside_slide" class="" style="width:2254px; left: 100px;" :style="{'left':nleft + 'px','transition':' all 2s'}">
 								<li v-for="v in diseaseList">
 									<div class="openclass_img">
-										<img :src="v.src" />
+										<span @click="todetails(0,v.id)"><img :src="v.img" /></span>
 									</div>
 									<p class="textover">{{v.title}}</p>
 								</li>
@@ -53,25 +56,27 @@
 					<!--生活养生-->
 					<div class="one-wrap clearfix" id="life">
 						<div class="column_left pull-left">
-							<h3>生活养生<i></i><a href="healthLists.html" target="_blank">更多</a></h3>
+							<h3>生活养生<i></i><router-link :to="{name:'diseaselist'}">更多</router-link></h3>
 							<ul class="column_content_ul">
 								<li v-for="v in lifeLists">
 									<div class="column_content_info pull-left">
-										<h4>{{v.title}}</h4>
-										<p class="textover2">{{v.content}}</p>
-										<span>{{v.time}}</span>
+										<div @click="todetails(0,0,v.id)">
+											<h4>{{v.title}}</h4>
+											<p class="textover2">{{v.subtitle}}</p>
+											<span>{{v.time}}</span>
+										</div>
 									</div>
 									<div class="column_content_img pull-right">
-										<img :src="v.src" />
+										<img :src="v.img" />
 									</div>
 								</li>
 							</ul>
 						</div>
 						<div class="column_right pull-left">
-							<h3>行业新闻<i></i><a target="_blank" href="healthLists.html">更多</a></h3>
+							<h3>行业新闻<i></i><router-link :to="{name:'diseaselist'}">更多</router-link></h3>
 							<ul>
-								<li v-for="v in lineNews">
-									<a>{{v.title}}</a>
+								<li v-for="v in lineNews" @click="todetails(0,0,0,v.id)">
+									<a class="textover">{{v.title}}</a>
 								</li>
 							</ul>
 						</div>
@@ -113,90 +118,43 @@
 						to: "healthlist"
 					},
 				],
-				newlists: [ ],
-				banners:[ ],
-				diseaseList: [{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "口里总是爱长泡？ 可能是这5种口腔疾病的信号"
-					},
-				],
-				lifeLists:[
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "卫健委发布癌症防治核心信息及知识要点111111",
-						content:"据统计，我国每年新发癌症病例超过350 万，死亡病例超过200 万，防控形势严峻。",
-						time:"2019-05-24 13:30:32"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "卫健委发布癌症防治核心信息及知识要点111111",
-						content:"据统计，我国每年新发癌症病例超过350 万，死亡病例超过200 万，防控形势严峻。",
-						time:"2019-05-24 13:30:32"
-					},
-					{
-						src: "img/health/gaoxuezhi.png",
-						title: "卫健委发布癌症防治核心信息及知识要点111111",
-						content:"据统计，我国每年新发癌症病例超过350 万，死亡病例超过200 万，防控形势严峻。",
-						time:"2019-05-24 13:30:32"
-					}
-				],
-				lineNews:[
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-						{title:"第十三届“5.25全国护肤日”在京正式启动"},
-				],
+				newlists: [],
+				banners:[],
+				diseaseList: [],
+				lifeLists:[],
+				lineNews:[],
 				nleft: 0
 			}
 		},
-		
 		created(){
-			//新闻资讯左边
+			//新闻资讯
 			this.$axios.get("../../static/json/health/news.json")
 			.then((res)=>{
 				var res= res.data.data;
 				var data = res.slice(0,4);
-				var data2 = res.slice(5,8);
+				var data2 = res.slice(4,8)
 				this.newlists = data.reverse();
 				this.banners = data2.reverse();
-				console.log(this.banners)
 			})
-			
-			this.$axios.get("../../static/json/pictext.json").then((data)=>{
-				console.log(data)
+			//疾病诊疗			
+			this.$axios.get("../../static/json/health/disease.json")
+			.then((res)=>{
+				var res= res.data.data;
+				var data = res.slice(0,8);
+				this.diseaseList = data.reverse();
+			});
+			//生活养生		
+			this.$axios.get("../../static/json/health/life.json")
+			.then((res)=>{
+				var res= res.data.data;
+				var data = res.slice(0,3);
+				this.lifeLists = data.reverse();
+			});
+			this.$axios.get("../../static/json/health/lineNews.json")
+			.then((res)=>{
+				var res= res.data.data;
+				var data = res.slice(0,9);
+				this.lineNews = data.reverse();
 			})
 		},
 		methods: {
@@ -219,342 +177,357 @@
 						id:id
 					}
 				})
+			},
+			todetails(nid,did,lid,lnid){
+				this.$router.push({
+					name:'healthdetails',
+					query:{
+						nid:nid,
+						did:did,
+						lid:lid,
+						lnid:lnid
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.healthtitle {
-		margin-top:55px;
-	}
-	/*轮播*/
+.el-carousel__item div{
+	cursor: pointer;
+}
+.healthtitle {
+	margin-top:55px;
+}
+/*轮播*/
+
+.block {
+	position: relative;
 	
-	.block {
-		position: relative;
-		
-	}
+}
+
+.el-carousel__item h3 {
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
+	color: #fff;
+	font-size: 20px;
+	height: 50px;
+	line-height: 50px;
+	text-align: left;
+	padding-left: 20px;
+	background: #000;
+	opacity: 0.5;
+	box-sizing: border-box;
+}
+
+.el-carousel__item:nth-child(2n) {
+	background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+	background-color: #d3dce6;
+}
+
+.health .health-left ul {
+	display: flex;
+	font-size: 30px;
+	color: #ccc;
+	border-bottom: 1px solid #ccc;
+	line-height: 50px;
+	justify-content: center;
 	
-	.el-carousel__item h3 {
-		position: absolute;
-		width: 100%;
-		left: 0;
-		top: 0;
-		color: #fff;
-		font-size: 20px;
-		height: 50px;
-		line-height: 50px;
-		text-align: left;
-		padding-left: 20px;
-		background: #000;
-		opacity: 0.5;
-		box-sizing: border-box;
-	}
+}
+
+.health .health-left ul li {
+	padding: 0 50px;
+	height: 50px;
+	line-height: 50px;
+	cursor: pointer;
+	position: relative;
+}
+
+.health .health-left ul li:last-child {
+	border: none;
+}
+
+.health .health-left ul li a {
+	color: #000;
+	font-size: 18px;
+}
+
+.health .health-left ul li:after {
+	content: "/";
+	position: absolute;
+	right: 0;
+	top: 5px;
+}
+
+.health .health-left ul li.cur a {
+	color: #0370d7;
+}
+
+.health .health-left ul li:hover a {
+	color: #0370d7;
+	font-size: 20px;
+	transition: all 1s;
+}
+/*内容板块*/
+
+.health-content {}
+
+.one-wrap {
+	padding-top: 50px;
+}
+
+.one-wrap .newsleft {}
+
+.one-wrap .newsleft ul {
+	width: 530px;
+}
+
+.one-wrap .newsleft ul li {
+	cursor: pointer;
+	margin-bottom: 18px;
+}
+
+.one-wrap .newsleft ul li h3 {
+	font-size: 24px;
+	line-height: 35px;
+	margin-bottom: 3px;
+}
+
+.one-wrap .newsleft ul h3 a {
+	color: #4c4a47;
+	font-size: 24px;
+}
+
+.one-wrap .newsleft ul li p {
+	font-size: 16px;
+	color: #999;
+}
+
+.one-wrap .newsright {}
+/*新闻*/
+
+.twonew {
+	height: 360px;
+}
+
+.column_right h3,
+.twonew h3,
+.column_left h3 {
+	background: url(../assets/health/content_title_bg.png) no-repeat 0;
+	padding-left: 20px;
+}
+
+.column_right h3 i,
+.column_left h3 i,
+.twonew h3 i {
+	margin-left: 40px;
+	display: inline-block;
+	width: 880px;
+	background: url(../assets/health/content_title_line.jpg) repeat-x;
+	height: 20px;
+}
+
+.column_right h3 a,
+.column_left h3 a,
+.twonew h3 a {
+	display: inline-block;
+	width: 80px;
+	height: 28px;
+	font-size: 16px;
+	margin-left: 12px;
+	border: 1px solid #1bbc9b;
+	border-radius: 28px;
+	line-height: 28px;
+	color: #1bbc9b;
+	text-align: center;
+}
+
+.twonew .newlist {
+	position: relative;
+	height: 260px;
+	width: 1138px;
+	overflow: hidden;
+}
+
+.twonew .newlist i {
+	position: absolute;
+	top: 100px;
+}
+
+.twonew .newlist i#i-previous {
+	left: -0px;
+	cursor: pointer;
+}
+
+.twonew .newlist i#i-next {
+	right: 0px;
+	cursor: pointer;
+}
+
+.twonew .newlist i img {
+	width: 19px;
+}
+
+.twonew .newlist ul {
+	position: absolute;
+	padding-left: 30px;
+	top: 10px;
+}
+
+.twonew .newlist ul li {
+	cursor: pointer;
+	padding-top: 20px;
+	float: left;
+	width: 248px;
+	height: 235px;
+	margin-right: 30px;
+	text-align: center;
+}
+
+.twonew .newlist ul li .openclass_img {
+	width: 240px;
+	height: 180px;
+	border: 1px solid #ccc;
+	box-shadow: 1px 1px 4px #ccc;
+	overflow: hidden;
+}
+
+.twonew .newlist ul li img {
+	width: 240px;
+	height: 180px;
+	margin: 0 auto;
+	display: block;
+}
+
+.twonew .newlist ul li p {
+	width: 240px;
+	height: 46px;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 60px;
+	text-align: center;
+	color: #545454;
+}
+
+.twonew .newlist ul li img:hover {
+	transform: scale(1.2);
+	transition: all 1s ease-in-out;
+}
+/*生活养生*/
+
+.column_left {
+	width: 550px;
+}
+
+.column_left h3 {}
+
+.column_left h3 i {
+	width: 300px;
+}
+
+ul.column_content_ul {
+	padding: 0 10px;
+}
+
+ul.column_content_ul li {
+	cursor: pointer;
+	overflow: hidden;
+	padding: 20px 0 10px 0;
+	border-bottom: 1px dashed #e5e5e5;
+}
+
+ul.column_content_ul li:last-child {
+	border: none;
+}
+
+ul.column_content_ul li .column_content_info {
+	width: 370px;
+	text-align: left;
+}
+
+ul.column_content_ul li .column_content_info h4 {
+	font-size: 20px;
+	color: #252525;
+	width: 370px;
+	word-break: keep-all;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 8px 0;
+}
+
+ul.column_content_ul li .column_content_info p {
+	color: #888;
+	font-size: 14px;
+	line-height: 24px;
+	height: 50px;
+	overflow: hidden;
 	
-	.el-carousel__item:nth-child(2n) {
-		background-color: #99a9bf;
-	}
-	
-	.el-carousel__item:nth-child(2n+1) {
-		background-color: #d3dce6;
-	}
-	
-	.health .health-left ul {
-		display: flex;
-		font-size: 30px;
-		color: #ccc;
-		border-bottom: 1px solid #ccc;
-		line-height: 50px;
-		justify-content: center;
-		
-	}
-	
-	.health .health-left ul li {
-		padding: 0 50px;
-		height: 50px;
-		line-height: 50px;
-		cursor: pointer;
-		position: relative;
-	}
-	
-	.health .health-left ul li:last-child {
-		border: none;
-	}
-	
-	.health .health-left ul li a {
-		color: #000;
-		font-size: 18px;
-	}
-	
-	.health .health-left ul li:after {
-		content: "/";
-		position: absolute;
-		right: 0;
-		top: 5px;
-	}
-	
-	.health .health-left ul li.cur a {
-		color: #0370d7;
-	}
-	
-	.health .health-left ul li:hover a {
-		color: #0370d7;
-		font-size: 20px;
-		transition: all 1s;
-	}
-	/*内容板块*/
-	
-	.health-content {}
-	
-	.one-wrap {
-		padding-top: 50px;
-	}
-	
-	.one-wrap .newsleft {}
-	
-	.one-wrap .newsleft ul {
-		width: 530px;
-	}
-	
-	.one-wrap .newsleft ul li {
-		margin-bottom: 18px;
-	}
-	
-	.one-wrap .newsleft ul li h3 {
-		font-size: 24px;
-		line-height: 35px;
-		margin-bottom: 3px;
-	}
-	
-	.one-wrap .newsleft ul h3 a {
-		color: #4c4a47;
-		font-size: 24px;
-	}
-	
-	.one-wrap .newsleft ul li p {
-		font-size: 16px;
-		color: #999;
-	}
-	
-	.one-wrap .newsright {}
-	/*新闻*/
-	
-	.twonew {
-		height: 360px;
-	}
-	
-	.column_right h3,
-	.twonew h3,
-	.column_left h3 {
-		background: url(../assets/health/content_title_bg.png) no-repeat 0;
-		padding-left: 20px;
-	}
-	
-	.column_right h3 i,
-	.column_left h3 i,
-	.twonew h3 i {
-		margin-left: 40px;
-		display: inline-block;
-		width: 880px;
-		background: url(../assets/health/content_title_line.jpg) repeat-x;
-		height: 20px;
-	}
-	
-	.column_right h3 a,
-	.column_left h3 a,
-	.twonew h3 a {
-		display: inline-block;
-		width: 80px;
-		height: 28px;
-		font-size: 16px;
-		margin-left: 12px;
-		border: 1px solid #1bbc9b;
-		border-radius: 28px;
-		line-height: 28px;
-		color: #1bbc9b;
-		text-align: center;
-	}
-	
-	.twonew .newlist {
-		position: relative;
-		height: 260px;
-		width: 1138px;
-		overflow: hidden;
-	}
-	
-	.twonew .newlist i {
-		position: absolute;
-		top: 100px;
-	}
-	
-	.twonew .newlist i#i-previous {
-		left: -0px;
-		cursor: pointer;
-	}
-	
-	.twonew .newlist i#i-next {
-		right: 0px;
-		cursor: pointer;
-	}
-	
-	.twonew .newlist i img {
-		width: 19px;
-	}
-	
-	.twonew .newlist ul {
-		position: absolute;
-		padding-left: 30px;
-		top: 10px;
-	}
-	
-	.twonew .newlist ul li {
-		cursor: pointer;
-		padding-top: 20px;
-		float: left;
-		width: 248px;
-		height: 235px;
-		margin-right: 30px;
-		text-align: center;
-	}
-	
-	.twonew .newlist ul li .openclass_img {
-		width: 240px;
-		height: 180px;
-		border: 1px solid #ccc;
-		box-shadow: 1px 1px 4px #ccc;
-		overflow: hidden;
-	}
-	
-	.twonew .newlist ul li img {
-		width: 240px;
-		height: 180px;
-		margin: 0 auto;
-		display: block;
-	}
-	
-	.twonew .newlist ul li p {
-		width: 240px;
-		height: 46px;
-		font-size: 15px;
-		font-weight: bold;
-		line-height: 60px;
-		text-align: center;
-		color: #545454;
-	}
-	
-	.twonew .newlist ul li img:hover {
-		transform: scale(1.2);
-		transition: all 1s ease-in-out;
-	}
-	/*生活养生*/
-	
-	.column_left {
-		width: 550px;
-	}
-	
-	.column_left h3 {}
-	
-	.column_left h3 i {
-		width: 300px;
-	}
-	
-	ul.column_content_ul {
-		padding: 0 10px;
-	}
-	
-	ul.column_content_ul li {
-		cursor: pointer;
-		overflow: hidden;
-		padding: 20px 0 10px 0;
-		border-bottom: 1px dashed #e5e5e5;
-	}
-	
-	ul.column_content_ul li:last-child {
-		border: none;
-	}
-	
-	ul.column_content_ul li .column_content_info {
-		width: 370px;
-		text-align: left;
-	}
-	
-	ul.column_content_ul li .column_content_info h4 {
-		font-size: 20px;
-		color: #252525;
-		width: 370px;
-		word-break: keep-all;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		padding: 8px 0;
-	}
-	
-	ul.column_content_ul li .column_content_info p {
-		color: #888;
-		font-size: 14px;
-		line-height: 24px;
-		height: 50px;
-		overflow: hidden;
-		
-	}
-	
-	ul.column_content_ul li .column_content_info span {
-		color: #888;
-		line-height: 20px;
-		font-size: 14px;
-	}
-	
-	ul.column_content_ul li .column_content_img {
-		width: 150px;
-		overflow: hidden;
-		border: 1px solid #ccc;
-		height: 110px;
-	}
-	
-	ul.column_content_ul li .column_content_img img {
-		width: 150px;
-		height: 110px;
-	}
-	
-	ul.column_content_ul li .column_content_img img:hover {
-		transform: scale(1.2);
-		transition: all 1s;
-	}
-	/*行业新闻*/
-	
-	.column_right {
-		width: 550px;
-		margin-left: 40px;
-	}
-	
-	.column_right ul {
-		padding-left: 30px;
-		padding-top: 20px;
-		color: #4cb590;
-	}
-	
-	.column_right h3 {}
-	
-	.column_right h3 i {
-		width: 300px;
-	}
-	
-	.column_right h3 a {}
-	
-	.column_right ul li {
-		list-style: disc;
-		line-height: 50px;
-		font-size: 16px;
-		text-align: left;
-	}
-	
-	.column_right ul li a {
-		color: #788082;
-		font-size: 16px;
-		cursor: pointer;
-	}
-	
-	#life {
-		margin-bottom: 50px;
-	}
+}
+
+ul.column_content_ul li .column_content_info span {
+	color: #888;
+	line-height: 20px;
+	font-size: 14px;
+}
+
+ul.column_content_ul li .column_content_img {
+	width: 150px;
+	overflow: hidden;
+	border: 1px solid #ccc;
+	height: 110px;
+}
+
+ul.column_content_ul li .column_content_img img {
+	width: 150px;
+	height: 110px;
+}
+
+ul.column_content_ul li .column_content_img img:hover {
+	transform: scale(1.2);
+	transition: all 1s;
+}
+/*行业新闻*/
+
+.column_right {
+	width: 550px;
+	margin-left: 40px;
+}
+
+.column_right ul {
+	padding-left: 30px;
+	padding-top: 20px;
+	color: #4cb590;
+}
+
+.column_right h3 {}
+
+.column_right h3 i {
+	width: 300px;
+}
+
+.column_right h3 a {}
+
+.column_right ul li {
+	list-style: disc;
+	line-height: 50px;
+	font-size: 16px;
+	text-align: left;
+}
+
+.column_right ul li a {
+	color: #788082;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+#life {
+	margin-bottom: 50px;
+}
 </style>

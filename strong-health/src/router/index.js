@@ -66,8 +66,7 @@ export default new Router({
 			meta:{
 				title:"资讯列表"
 			}
-		},
-		{
+		},   		{
 			path: '/healthdetails',   //资讯详情
 			component: healthdetails,
 			name:"healthdetails",

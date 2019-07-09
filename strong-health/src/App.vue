@@ -3,6 +3,7 @@
 		<headnav></headnav>
 		<router-view></router-view>
 		<foot v-if="flag"></foot>
+		<span class="totop" @click="goTop" ref="span" title="回到顶部"></span>
 	</div>
 </template>
 
@@ -20,7 +21,9 @@
 		},
 		data(){
 			return {
-				flag:true
+				flag:true,
+				isTop:true,
+				timer:null
 			}
 		},
 		watch: {
@@ -32,6 +35,36 @@
 				}
 			}
 		},
+		mounted(){
+			this.scrollToTop()
+		},
+		methods:{
+			scrollToTop(){
+				let clientHeight = document.documentElement.clientHeight;
+				let obtn = this.$refs.span;
+				window.onscroll = function(){
+					let osTop = document.documentElement.scrollTop || document.body.scrollTop;
+					if(osTop > 0){
+						obtn.style.display = 'block';
+					}else{
+						obtn.style.display = 'none';
+					};
+				}
+			},
+			goTop(){
+				this.timer = setInterval(()=>{
+					let osTop = document.documentElement.scrollTop || document.body.scrollTop;
+					let ispeed = Math.floor(-osTop/5);
+					document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed;
+					this.isTop = true;
+					if(osTop === 0){
+						clearInterval(this.timer)
+					}
+				},30)
+			}
+			
+		},
+		
 	}
 </script>
 
@@ -95,4 +128,16 @@
 		width: 1170px;
 		margin: 0 auto;
 	}
+	/*返回顶部*/
+.totop {
+	cursor: pointer;
+	width: 48px;
+	height: 48px;
+	position: fixed;
+	bottom: 80px;
+	right: 80px;
+	background: url(./assets/health/top.png) no-repeat center center;
+	border: 1px solid #ccc;
+	display: none;
+}
 </style>
