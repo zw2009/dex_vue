@@ -1,146 +1,108 @@
 <template>
 	<div class="find-full">
 		<div class="bs-example" data-example-id="hoverable-table">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>职位名</th>
-								<th>公司名</th>
-								<th>工作地点</th>
-								<th>薪资</th>
-								<th>发布时间</th>
-								<th>职位申请</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">健康管理医生1</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生2</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生3</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生4</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生5</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生6</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生7</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生8</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生9</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生10</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-							<tr>
-								<th scope="row">健康管理医生11</th>
-								<td>湖南思众云医疗</td>
-								<td>长沙-岳麓区</td>
-								<td>面谈</td>
-								<td>2019.4.19</td>
-								<td><button type="button" class="btn btn-primary">投递简历</button></td>
-							</tr>
-						</tbody>
-					</table>
-					<nav aria-label="Page navigation">
-						<ul class="pagination">
-							<li>
-								<a href="javascript:void(0)" aria-label="Previous">
-									<span aria-hidden="true">&laquo;</span>
-								</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)">1</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)">2</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)">3</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)">4</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)">5</a>
-							</li>
-							<li>
-								<a href="javascript:void(0)" aria-label="Next">
-									<span aria-hidden="true">&raquo;</span>
-								</a>
-							</li>
-						</ul>
-					</nav>
-				</div>
+				 <el-table
+				   :data="fulls.slice((currentPage-1)*pageSize, currentPage*pageSize)"
+				   stripe
+				    style="width: 100%">
+		                <el-table-column
+		                  prop="job"
+		                  label="职位名"
+		                  width="180">
+		                </el-table-column>
+		                 <el-table-column
+		                  prop="firm"
+		                  label="公司名"
+		                  width="238">
+		                </el-table-column>
+		                 <el-table-column
+		                  prop="address"
+		                  label="工作地点"
+		                  width="180">
+		                </el-table-column>
+		                 <el-table-column
+		                  prop="pay"
+		                  label="薪资"
+		                  width="180">
+		                </el-table-column>
+		                <el-table-column
+		                  prop="time"
+		                  label="发布时间"
+		                  width="180">
+		                </el-table-column>
+		                <el-table-column
+		                  prop=""
+		                  label="职位申请"
+		                  width="180">
+		                   <el-button type="primary" size="mini">投递简历</el-button>
+	                	</el-table-column>
+				</el-table>
+				<el-col :span="24" class="toolbar pageBar">
+				    <el-pagination
+				    
+				    @current-change="handleCurrentChange"
+				    :current-page="currentPage"
+				    :page-sizes="[10, 20, 30, 40]"
+				    :page-size="pageSize"
+				    layout=" prev, pager, next, total"
+				    :total="total">
+				    </el-pagination>
+				</el-col>
+		</div>
 	</div>
 </template>
 
 <script>
 	export default{
-		name:'find-full'
+		name:'find-full',
+		data(){
+			return{
+				total:1000,//默认数据总条数
+				pageSize:10,//每页的数据条数
+				currentPage:1,//默认开始页
+				fulls:[]
+			}
+		},
+		methods:{
+			getUser:function(){
+				this.$axios.get('../../static/json/fulls.json')
+				.then((res)=>{
+					return res.data.data;
+				})
+				.then((res)=>{
+					this.fulls = res;
+					this.total = res.length;
+					
+					console.log(this.fulls)
+				})
+			},
+			handleCurrentChange(currentPage){
+				this.currentPage = currentPage;
+			}
+		},
+		created(){
+			this.getUser();
+		}
 	}
 </script>
 
 <style scoped="">
+.find-full {
+    height: 556px;
+}
+>>>.el-table td, .el-table th{
+	padding: 8px 0;
+}
+>>>.el-pagination {
+    white-space: nowrap;
+    padding: 12px 5px;
+    color: #303133;
+    font-weight: 700;
+    text-align: center;
+}
+.foot{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
 </style>

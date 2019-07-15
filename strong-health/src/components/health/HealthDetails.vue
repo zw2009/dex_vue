@@ -1,6 +1,7 @@
 <template>
-	<div class="healthdetails">
+	<div class="healthdetails container">
 		<div class="banner3"></div>
+		<el-button><router-link to="/">返回上一页</router-link></el-button>
 			<div class="qq_conent container">
 				<h1>{{blog.title}}</h1>
 				<div class="content-article" v-html="blog.content">
@@ -71,6 +72,9 @@
 </script>
 
 <style scoped="">
+.healthdetails a{
+	padding: 20px;
+}
 >>>.content-article p{
 	text-indent: 2em;
 	position: relative;

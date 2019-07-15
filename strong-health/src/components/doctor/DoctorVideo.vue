@@ -3,110 +3,47 @@
 		<article class="banner banner1">
 			<h2>视频专区列表</h2>
 		</article>
-
+		
 		<div class="container clearfix vievone" id="vievtr">
 			<h2>视频专区<a href="javascript:history.go(-1)">返回上一页</a></h2>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
+			<!--<router-link :to="{name:'doctorvideoDetails'}" > -->
+				<div class="video-all" v-for="v in videos" @click="tolinkV(v.id)">
 					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
 					</video>
 					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
+					<h4>{{v.name}}</h4>
 				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-					<h4>11111111</h4>
-				</div>
-			</router-link>
+			<!--</router-link>-->
 		</div>
 	</div>
 </template>
 
 <script>
+	export default {
+		data(){
+			return{
+				videos:[]
+			}
+		},
+		methods:{
+			gitVideo(){
+				this.$axios.get("../../../static/json/video.json").then((res)=>{
+					this.videos = res.data.data.reverse()
+				})
+			},
+			tolinkV(id){
+				this.$router.push({
+					name:'doctorvideoDetails',
+					query:{
+						id:id
+					}
+				});
+			}
+		},
+		created(){
+			this.gitVideo();
+		}
+	}
 </script>
 
 <style scoped="">
@@ -272,14 +209,15 @@
 	}
 	
 	.video-all p {
-		    cursor: pointer;
-    position: absolute;
-    left: 0;
-    top: -12px;
-    width: 350px;
-    background: url(/static/img/vi.png) no-repeat center center !important;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+		cursor: pointer;
+	    position: absolute;
+	    left: 0;
+	    top: -12px;
+	    width: 350px;
+	    height: 212px;
+	    background: url(/static/img/vi.png) no-repeat center center !important;
+	    border-top-left-radius: 15px;
+	    border-top-right-radius: 15px;
 	}
 	
 	.el-icon-caret-right:before {

@@ -89,12 +89,8 @@
 </template>
 
 <script>
-	import foot from "@/components/Foot"
 	export default {
 		name: 'health',
-		components: {
-			foot
-		},
 		data() {
 			return {
 				news: [{
@@ -201,12 +197,9 @@
 	margin-top:55px;
 }
 /*轮播*/
-
 .block {
 	position: relative;
-	
 }
-
 .el-carousel__item h3 {
 	position: absolute;
 	width: 100%;

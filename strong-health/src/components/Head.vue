@@ -38,6 +38,11 @@
 						to: "doctorcare",
 						title: "医护人才"
 					}
+					,
+					{
+						to: "szforum",
+						title: "思众论坛"
+					}
 				],
 				routs2: [{
 						to: "register",
@@ -74,7 +79,7 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	.header {
 		height: 42px;
 		width: 100%;
@@ -87,7 +92,6 @@
 	
 	.header img {
 		width: 100px;
-		margin-top: 5px;
 	}
 	
 	.header .nav {

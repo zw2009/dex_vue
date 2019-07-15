@@ -3,30 +3,15 @@
 		<div class="container clearfix vievone" id="vievtr">
 			<h2>视频专区<router-link :to="{name:'doctorvideo'}">more>></router-link></h2>
 			
-			<router-link tag="a" target="_blank" :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
+			
+				<div class="video-all" v-for="video in videos" @click="tolinkV(video.id)">
+					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" 					width="350" height="200">
+						
 					</video>
 					<p class="el-icon-caret-right"></p>
-						<h4>11111111</h4>
+					<h4>{{video.name}}</h4>
 				</div>
-			</router-link>
-			<router-link tag="a" target="_blank" :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-						<h4>11111111</h4>
-				</div>
-			</router-link>
-			<router-link tag="a" target="_blank" :to="{name:'doctorvideoDetails'}">
-				<div class="video-all">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
-					</video>
-					<p class="el-icon-caret-right"></p>
-						<h4>11111111</h4>
-				</div>
-			</router-link>
+		
 			<!--<video width="320" height="240" controls>
 			   
 			    <source src="movie.ogg" type="video/ogg">
@@ -39,14 +24,8 @@
 				<h3>{{t.title}}</h3>
 				<p class="text-primary branch-name">{{t.content}}</p>
 				<div class="col-xs-12 imgflex">
-					<a href="#" class="thumbnail">
-						<img :src="t.src" alt="...">
-					</a>
-					<a href="#" class="thumbnail">
-						<img :src="t.src" alt="...">
-					</a>
-					<a href="#" class="thumbnail">
-						<img :src="t.src" alt="...">
+					<a href="#" class="thumbnail" v-for="v in t.images">
+						<img :src="v.src" alt="...">
 					</a>
 				</div>
 			</div>
@@ -55,27 +34,48 @@
 </template>
 
 <script>
-	import foot from '@/components/Foot'
-	
 	export default {
 		data(){
 			return{
-				texts:[
-				{id:1,title:'常见慢性气道疾病中大环内脂类抗菌药物怎么用?指南告诉你',content:'自从日本上世纪 80 年代发现大环内酯类用于治疗弥漫性泛细支气管炎取得良好的效果后，大环内酯类不依赖其抗菌作用的抗炎及免疫抑制效应就有了越来越多的研究，这对于常见的慢性呼吸系统疾病如慢性阻塞性疾病及支气管扩张等有重要或潜在的价值。 1. 大环内酯类抗菌药物 [1] 包括哪些？ 大环内酯类按化学结构，常见的大环内酯类抗生素有： (1)12 元环大环内酯类，如酒霉素等； (2)14 元环大环内酯类，包括红霉素、罗红霉素、克拉霉素、地红霉素等； (3)15 元环大环内酯类，以半合成的阿奇霉素为代表药物； (4)16 元环大环内酯类，包括螺旋霉素、乙酰螺旋霉素、麦迪霉素、交沙霉素、吉他霉素等。 其中的 14 元环、15 元环大环内酯类具有抗菌外作用。 2. 大环内酯类的抗菌外作用机制 [1] 主要包括以下五个方面： （1）抗炎效应：大环内酯类可抑制炎性细胞及其细胞因子和炎性介质，从而发挥抗炎作用； （2）调节气道分泌：气道黏液高分泌是多种慢性气道疾病的重要特征，可导致气流受限、纤毛黏液转运功能降低及反复的呼吸道感染；体内外试验均证实大环内酯类可以抑制黏液高分泌； （3）免疫调节相关抗微生物效应：大环内酯类即使在 MIC 以下仍能干扰细菌蛋白合成，且对大环内酯类耐药的铜绿假单胞菌也同样具有此活性',src:'http://u1.huatu.com/zhangxin/20150827/4.jpg'},
-				{id:2,title:'常见慢性气道疾病中大环内脂类抗菌药物怎么用?指南告诉你',content:'自从日本上世纪 80 年代发现大环内酯类用于治疗弥漫性泛细支气管炎取得良好的效果后，大环内酯类不依赖其抗菌作用的抗炎及免疫抑制效应就有了越来越多的研究，这对于常见的慢性呼吸系统疾病如慢性阻塞性疾病及支气管扩张等有重要或潜在的价值。 1. 大环内酯类抗菌药物 [1] 包括哪些？ 大环内酯类按化学结构，常见的大环内酯类抗生素有： (1)12 元环大环内酯类，如酒霉素等； (2)14 元环大环内酯类，包括红霉素、罗红霉素、克拉霉素、地红霉素等； (3)15 元环大环内酯类，以半合成的阿奇霉素为代表药物； (4)16 元环大环内酯类，包括螺旋霉素、乙酰螺旋霉素、麦迪霉素、交沙霉素、吉他霉素等。 其中的 14 元环、15 元环大环内酯类具有抗菌外作用。 2. 大环内酯类的抗菌外作用机制 [1] 主要包括以下五个方面： （1）抗炎效应：大环内酯类可抑制炎性细胞及其细胞因子和炎性介质，从而发挥抗炎作用； （2）调节气道分泌：气道黏液高分泌是多种慢性气道疾病的重要特征，可导致气流受限、纤毛黏液转运功能降低及反复的呼吸道感染；体内外试验均证实大环内酯类可以抑制黏液高分泌； （3）免疫调节相关抗微生物效应：大环内酯类即使在 MIC 以下仍能干扰细菌蛋白合成，且对大环内酯类耐药的铜绿假单胞菌也同样具有此活性',src:'http://u1.huatu.com/zhangxin/20150827/4.jpg'},
-				]
+				texts:[],
+				videos:[]
 			}
 		},
 		methods:{
 			tolink(id){
-				let routeData =  this.$router.resolve({
+				this.$router.push({
 			          path: 'doctordestails',
 			          query: {
 			            id: id
 			          }
 			       });
-			   	window.open(routeData.href,'_blank');
+			},
+			tolinkV(id){
+				this.$router.push({
+					name:"doctorvideoDetails",
+					query:{
+						id:id
+					}
+				});
+			},
+			getVideos(){
+				this.$axios.get("../../static/json/video.json")
+				.then((res)=>{
+					this.videos = res.data.data.reverse().slice(0,6);
+				})
+			},
+			getPicText(){
+				this.$axios.get("../../static/json/pictext.json").then((res)=>{
+					
+					let data = res.data.data.reverse();
+					this.texts =  data.slice(0,3);
+					console.log(this.texts);
+				})
 			}
+		},
+		created(){
+			this.getVideos();
+			this.getPicText();
 		}
 		
 	}

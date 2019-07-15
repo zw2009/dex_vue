@@ -1,17 +1,11 @@
 <template>
-	<div class="doctor-details">
+	<div class="doctor-details container">
 		<article class="banner banner1">
 		</article>
-		<div class="qq_conent container">
-			<h1>田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错过</h1>
-			<div class="content-article">
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br /><br /><br /><br /><br />
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br />
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br />田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br />
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br />
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错<br />
-				田里一大害草，过去常用来喂猪，如今成“长寿菜”，夏季请别错
+		<el-button plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button>
+		<div class="qq_conent">
+			<h1>{{text.title}}  </h1>
+			<div class="content-article" v-html="text.contenta">
 				
 			</div>
 		</div>
@@ -22,8 +16,27 @@
 
 <script>
 	export default{
+		data(){
+			return{
+				text:{},
+				id:this.$route.query.id
+			}
+		},
+		methods:{
+			getText(){
+				this.$axios.get("../../static/json/pictext.json").then((res)=>{
+					let data = res.data.data;
+					data.forEach((v,i)=>{
+						if(this.id == v.id){
+							this.text = v;
+							console.log(v)
+						}
+					});
+				})
+			}
+		},
 		created(){
-			console.log(this.$route.query.id);
+			this.getText();
 		}
 	}
 </script>
@@ -32,6 +45,7 @@
 .qq_conent {
 	padding-bottom: 50px;
 	width: 900px;
+	margin: 0 auto;
 }
 
 .qq_conent h1 {
@@ -42,7 +56,7 @@
 	margin-top: 8px;
 }
 
-.content-article p {
+>>>.content-article p {
 	text-indent: 2em;
 	line-height: 2.2;
 	margin-bottom: 2em;
@@ -51,7 +65,7 @@
 	font-size: 18px;
 }
 
-.content-article p img {
+>>>.content-article p img {
 	max-width: 600px;
 	margin: 20px auto;
 	display: block;

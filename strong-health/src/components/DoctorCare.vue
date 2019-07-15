@@ -29,15 +29,8 @@
 					<router-link :to="{name:'parttimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link> 
 				</p>
 			</div>
-
-			<!--外包层切换-->
-			<div>
-				<!--职位展示-->
-				<router-view></router-view>
-				
-				<!--职位展示2-->
-				
-			</div>
+			<!--职位展示-->
+			<router-view></router-view>
 		</div>
 
 		<!--模态框弹窗-->
@@ -58,17 +51,12 @@
 </template>
 
 <script>
-	import foot from '@/components/Foot'
-	
 	export default { 
 		name:"doctorcare",
-		components:{
-			foot
-		}
 	}
 </script>
 
-<style>
+<style scoped>
 thead th,tbody tr th,tbody tr td{
 		text-align: center;
 	}
@@ -79,7 +67,7 @@ thead th,tbody tr th,tbody tr td{
 	border-radius: 5px;
 }	
 .job-change {
-	padding: 30px 0 20px 0;
+	padding:22px 0 14px 0;
 }
 
 .job-change a {
@@ -90,8 +78,8 @@ thead th,tbody tr th,tbody tr td{
 	float: right;
 }
 
-.btn {
-	padding: 1px 5px;
+>>>.btn {
+	padding:1px 5px !important;
 }
 
 nav {
@@ -171,5 +159,8 @@ nav {
 /*简历投递*/
 button.btn.btn-primary {
     width: 80px;
+}
+>>>tbody tr{
+	cursor: pointer;
 }
 </style>

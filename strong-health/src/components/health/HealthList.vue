@@ -1,9 +1,10 @@
 <template>
-	<div class="healthlist">
+	<div class="healthlist container">
 		<div class="banner3">
 
 		</div>
-		<div class="container clearfix">
+		<el-button style="margin-bottom: 20px;"><router-link to="/">返回上一页</router-link></el-button>
+		<div class=" clearfix">
 			<!--左边切换-->
 			<div class="leftLabel pull-left">
 				<ul>
@@ -100,7 +101,7 @@
 
 <style scoped="">
 .container{
-	margin-top:70px;
+	margin-top:60px;
 }
 body {
 	background: rgb(244, 244, 244);
