@@ -67,10 +67,10 @@
 					}
 				},
 				tolink(link){
-					let routerData = this.$router.resolve({
+					this.$router.push({
 						name:link
 					})
-					window.open(routerData.href,'_blank');
+					
 				}
 		}
 	}

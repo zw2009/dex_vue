@@ -41,7 +41,7 @@
 					,
 					{
 						to: "szforum",
-						title: "思众论坛"
+						title: "论坛"
 					}
 				],
 				routs2: [{

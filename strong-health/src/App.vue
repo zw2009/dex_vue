@@ -75,7 +75,7 @@
 		list-style: none;
 	}
 	ul,
-	h3 {
+	h3,h2 {
 		margin: 0;
 		padding: 0;
 	}

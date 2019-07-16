@@ -6,11 +6,12 @@ import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
-import url from './url/url'
 
-Vue.prototype.URL = url
 
 Vue.prototype.$axios = axios
+axios.defaults.baseURL = '/api'
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);

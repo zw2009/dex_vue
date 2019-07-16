@@ -16,6 +16,10 @@
 											<input type="text" class="form-control" ref="phone" placeholder="请输入手机号" @keydown="btnYes"> 
 										</div>
 										<div class="form-group">
+											<label>用户名</label>
+											<input type="text" class="form-control" ref="user" placeholder="请输入用户名"> 
+										</div>
+										<div class="form-group">
 											<label>个人/企业</label>
 											<select class="form-control individual-enterprise" ref="changCom" @change="changeComy">
 												<option value="3">个人账号</option>
@@ -75,75 +79,77 @@
 		methods:{
 				changeComy(){
 					let changCom = this.$refs.changCom.value
-					if(changCom == 3){
+					if(changCom == 2){
 						this.showCompy = true;
+						
 					}else{
 						this.showCompy = false;
+						this.$refs.compy.value = "";
 					}
 				},
 				submitRegister(){ //提交注册
 					let phone = this.$refs.phone.value;
+					let user = this.$refs.user.value;
 					let pwd = this.$refs.pwd.value;
 					let repwd = this.$refs.repwd.value;
 					let code = this.$refs.code.value; //验证码
 					let CompanyName = this.$refs.compy.value;
-					let changCom = this.$refs.changCom.value; //判断是个人还是企业：2为个人3为企业
+					let changCom = this.$refs.changCom.value; //判断是个人还是企业：3为个人2为企业
 					var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
 					if(this.showCompy == true && CompanyName == ""){
 						alert("请输入企业名称");
 					}else if(phone == "" || !myreg.test(phone)){
 						alert("请输入正确的手机号码");
+					}else if(user == ""){
+						alert("请输入用户名");
 					}else if(pwd == ""){
 						alert("请输入密码");
 					}else if(pwd != repwd){
 						alert("两次输入密码不一致")
-					}else{
-						var isMessageOk = this.getValue();
-						if(isMessageOk){
-//							console.log(phone)
-//							console.log(pwd)
-//							console.log(repwd)
-//							console.log(code)
-//							console.log(CompanyName)
-//							console.log(changCom)
-//							this.$axios.post('127.0.0.1:8080/register',{
-//								username:phone,
-//								password:pwd,
-//								CompanyName:CompanyName,
-//								changCom,changCom
-//							}).then((res)=>{
-//								if(res.data.status == "0"){
-//									alert("注册成功");
-//									this.$router.push({path:'/login'});
-//								}
-//							})
+					}else{ 
+							this.$axios.post('/strong_portal_site/user/userRegister',{
+								loginName:phone,
+								userName:user,
+								password:pwd,
+								companyname:CompanyName,
+								userTyp:changCom,
+								code:code
+							}).then((res)=>{
+								if(res.data.resultCode == "1"){
+									this.$message({
+							          message:res.data.resultMessage,
+							          type: 'success'
+							        });
+							        this.$router.push({path:'/login'});
+								}
+							})
 							
-						}
 					
 					}
 				},
 				getCodeValue(){
-					//1、判断手机号码是否已注册
-					/*let urls = "127.0.0.1:8080/register?username="+this.$refs.phone.value;
-					this.$axios.get(urls).then((res)=>{
-						if(res.data.status == '0'){
-							alert("您的手机号码已注册");
-						}else{
-							//2、未注册的话就利用后台发送验证码给手机
-							
-							
-							//3、发送手机号码之后倒计时
-							
-						}
-					})*/
-					//3、发送手机号码之后倒计时
+					//发送手机号码之后倒计时
 					this.isrefreshpic = true;
 					if(this.isrefreshpic){
-						let sj = Math.ceil(Math.random(10+1)*1000000); //手机验证码
-						window.localStorage.setItem("code",sj);
-						console.log(sj);
+						let phone = this.$refs.phone.value;
+						//获取手机号码发送给后台
+						this.$axios.post("/strong_portal_site/code/createCode",{
+							phone:phone
+						}).then((res)=>{
+							if(res.data.resultCode == "1"){ //13272736646 zhangwei 123456 394620 思众 2
+								this.$message({
+						          message: res.data.resultMessage,
+						          type: 'success'
+						        });
+							}else{
+								this.$message.error(res.data.resultMessage);
+							}
+							
+						}).catch((err)=>{
+							console.log(err)
+						})
 						//设置定时器
-						this.time = 10;
+						this.time = 120;
 						let timer = setInterval(()=>{
 							this.time--;
 							if (this.time < 0) {
@@ -155,21 +161,6 @@
 								this.btnValue = "还有"+this.time+"s重新获取";
 							} 
 						},1000);
-					}
-				},
-				getValue(){//短信验证码比对
-					let code = this.$refs.code.value;
-					let codes = window.localStorage.getItem("code");
-					console.log(code);
-					console.log(codes)
-					if(code == ''){
-						alert("请输入短信验证码");
-					}else if(code == codes){
-						console.log("验证码输入正确");
-						return true;
-					}else{
-						alert("验证码不正确");
-						return false;
 					}
 				},
 				btnYes(){//获取验证码的btn启用
