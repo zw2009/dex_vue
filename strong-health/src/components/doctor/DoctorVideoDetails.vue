@@ -3,9 +3,8 @@
 		<div class="container" id="vievtr" style="padding:70px 0 30px 0;">
 
 			<div class="video-con video-all">
-				<h2>{{video.name}}<el-button style="float: right;" plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button></h2>
-				<video id="my-player" class="video video-js vjs-big-play-centered"  autoplay="autoplay" controls poster="" width="1000" height="560">
-				<source :src="video.src" >
+				<h2>{{video.title}}<el-button style="float: right;" plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button></h2>
+				<video id="my-player" :src="video.url" class="video video-js vjs-big-play-centered"  autoplay="autoplay" controls poster="" width="1000" height="560">
 				</video>
 			</div>
 		</div>
@@ -18,23 +17,22 @@
 		data(){
 			return{
 				id:this.$route.query.id,
-				video:""
+				video:{}
 			}
 		},
 		methods:{
 			getVideo(){
-				this.$axios.get("../../static/json/video.json")
+				this.$axios.get("/strong_portal_site/video/selectVideoList")
 				.then((res)=>{
-					//console.log(res.data.data);
-					let data = res.data.data;
+					let data = res.data.resultObj.videoList;
 					data.forEach((v,i)=>{
 						
-						if(this.id == v.id){
+						if(this.id == v.videoId){
 							this.video = v;
-							console.log(v);
 						}
 					})
 				})
+				
 			}
 		},
 		created(){

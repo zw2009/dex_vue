@@ -22,21 +22,12 @@
 			}
 		},
 		created(){
-			console.log(this.nid)
 			this.$axios.post('/strong_portal_site/article/selectArtileById',{
 				articleId:this.nid
 			})
 			.then((res)=>{
 				var res = res.data.resultObj.articlList;
 				this.blog = res;
-				console.log(this.nid) 
-				console.log(res) 	
-//				res.forEach((v,i)=>{
-//					if(this.nid == v.articleId){
-//						this.blog = v;
-//						console.log(this.blog) 	
-//					}
-//				})
 			})
 		}
 	}

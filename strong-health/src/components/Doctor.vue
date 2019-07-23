@@ -4,12 +4,12 @@
 			<h2>视频专区<router-link :to="{name:'doctorvideo'}">more>></router-link></h2>
 			
 			
-				<div class="video-all" v-for="video in videos" @click="tolinkV(video.id)">
-					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" 					width="350" height="200">
+				<div class="video-all" v-for="v in videos" @click="tolinkV(v.videoId)">
+					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
 						
 					</video>
 					<p class="el-icon-caret-right"></p>
-					<h4>{{video.name}}</h4>
+					<h4>{{v.title}}</h4>
 				</div>
 			   <!-- <source src="movie.ogg" type="video/ogg">-->
 		</div>
@@ -56,20 +56,19 @@
 				window.open(routeData.href,"_blank");
 			},
 			getVideos(){
-				this.$axios.get("../../static/json/video.json")
+				this.$axios.post("/strong_portal_site/video/selectVideoList")
 				.then((res)=>{
-					this.videos = res.data.data.reverse().slice(0,6);
+					this.videos = res.data.resultObj.videoList.slice(0,6);
 				})
 			},
 			getPicText(){
-				//生活养生		
+				//图文专区	
 				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
 					dictId :201907020929450000,
 					status :1
 				})
 				.then((res)=>{
-					this.texts = res.data.resultObj.articlList;
-					console.log(this.texts)
+					this.texts = res.data.resultObj.articlList.slice(0,3);
 				});
 				}
 		},
@@ -261,7 +260,7 @@ video::-webkit-media-controls-panel {
 }
 
 .pictext {
-	padding: 0px 20px;
+	padding: 14px 20px;
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	

@@ -37,21 +37,14 @@
 </template>
 
 <script> 
-	import { mapMutations  } from 'vuex'
+
 	export default{
 		data(){
 			return {
-				userToken:''
 			}
 		},
 		methods:{
-			...mapMutations(['changeLogin']),
-			
-			
-			
-			
 			login(){
-				let _this=this;
 				let phone = this.$refs.phone.value;
 				let pwd = this.$refs.pwd.value;
 				var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
@@ -63,19 +56,19 @@
 					this.$axios.post("/strong_portal_site/user/userLogin",{
 						loginName:phone,
 						password:pwd
-					},
-					{
-		              "Authorization":""
-		            }).then((res)=>{
+					}).then((res)=>{
 						if(res.data.resultCode == "1"){
 							this.$message({
 					          message: '登陆成功',
 					          type: 'success'
         					});
-        					 _this.userToken=res.data.token;
-        					  console.log(this.userToken)//获取到的token
-        					 _this.changeLogin({ Authorization: this.userToken });
-							this.$router.push({path:'/'});
+        				//把当前用户登录的返回信息放到sesstionStorage
+        				sessionStorage.setItem("LoginUser",JSON.stringify(res.data.resultObj.token));
+        				//把用户当前的信息放到vuex里面 
+        				this.$store.commit('initUser',res.data.resultObj.token) 
+						this.$router.push({
+							path:'/'
+						});
 						}else{
 							this.$message.error({
 					          message: '账号不正确或密码错误',
@@ -134,6 +127,7 @@ form {
 .container {
 	width: 500px !important;
 	margin: 0 auto;
+	margin-bottom: 272px;
 }
 .btn{
 	padding: 5px 15px;

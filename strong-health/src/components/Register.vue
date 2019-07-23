@@ -231,6 +231,7 @@
 .container {
 	width: 500px;
 	margin: 0 auto;
+	margin-bottom: 100px;
 }
 #register1{
 	background: #337ab7;

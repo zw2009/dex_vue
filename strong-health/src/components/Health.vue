@@ -141,26 +141,10 @@
 			
 			
 					this.lineNews = res.data.resultObj.industryList;
-//				}
-			})
-			
-				
 
-			
-			this.postdata();
+		})
 		},
 		methods: {
-			//存储对象
-			postdata(){
-				
-				var userEntity = {
-			    name: 'tom',
-			    age: 22
-				};
-				sessionStorage.setItem("news",JSON.stringify(userEntity))
-				
-				
-			},
 			clickLeft() {
 				this.nleft += 1112;
 				if(this.nleft == 1112) {
@@ -182,9 +166,6 @@
 				})
 			}
 			
-		},
-		beforeDestroy(){
-			console.log(111)
 		}
 	}
 </script>

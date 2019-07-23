@@ -11,7 +11,10 @@
 					</li>
 				</ul>
 				<ul class="nav-right">
-					<a v-for="(v,i) in routs2" @click="routeChange(v.to)">{{v.title}}</a>
+					<router-link to="/register" v-if="!loginfalg">{{register}}</router-link>
+					<router-link to="/login" v-if="!loginfalg">{{login}}</router-link>
+					<a v-if="loginfalg" >欢迎您登录思众云</a>
+					<a v-if="loginfalg" @click="leave">退出</a>
 					<li id="inStorng">
 						<a href="http://www.51szyly.com/a/login" target="_blank">进入医疗云</a>
 					</li>
@@ -44,29 +47,32 @@
 						title: "论坛"
 					}
 				],
-				routs2: [{
-						to: "register",
-						title: "注册"
-					},
-					{
-						to: "login",
-						title: "登录"
-					}
-				],
+				register:"注册",
+				login:"登录",
 				changeRed: 0,
-				flag: true
+				flag: true,
+				loginfalg:false
 			}
 		},
 		watch: {
 			'$route' (to, from) {
+				if(from.name == 'login'){
+					this.getuser();
+				}
 				if(to.name == 'register' || to.name == 'login' || to.name == "findpwd") {
 					this.flag = false;
 				} else {
 					this.flag = true;
 				}
 			}
+			
 		},
 		methods: {
+			leave(){
+				sessionStorage.removeItem("LoginUser");
+				this.$router.push('/login');
+				this.loginfalg = false
+			},
 			change(index) {
 				this.changeRed = index;
 			},
@@ -74,7 +80,18 @@
 				this.$router.push({
 					name: route
 				})
+			},
+			getuser(){
+				if(sessionStorage.getItem("LoginUser")){
+					this.loginfalg = true
+				}
 			}
+		},
+		created(){
+			this.getuser();
+		},
+		destroyed(){
+			alert(1)
 		}
 	}
 </script>

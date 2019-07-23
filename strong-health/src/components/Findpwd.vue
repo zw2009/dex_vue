@@ -180,6 +180,7 @@
 
 .container {
 	width: 500px;
+	margin-bottom: 112px;
 }
 /*点击*/
 #findpwd{

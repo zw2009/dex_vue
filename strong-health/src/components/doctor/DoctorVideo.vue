@@ -7,13 +7,12 @@
 		<div class="container clearfix vievone" id="vievtr">
 			<h2>视频专区<a href="javascript:history.go(-1)">返回上一页</a></h2>
 			<!--<router-link :to="{name:'doctorvideoDetails'}" > -->
-				<div class="video-all" v-for="v in videos" @click="tolinkV(v.id)">
+				<div class="video-all" v-for="v in videos" @click="tolinkV(v.videoId)">
 					<video id="my-player" class="video-js vjs-big-play-centered" controls preload="none" data-setup="{}" width="350" height="200">
 					</video>
 					<p class="el-icon-caret-right"></p>
-					<h4>{{v.name}}</h4>
+					<h4>{{v.title}}</h4>
 				</div>
-			<!--</router-link>-->
 		</div>
 	</div>
 </template>
@@ -27,8 +26,9 @@
 		},
 		methods:{
 			gitVideo(){
-				this.$axios.get("../../../static/json/video.json").then((res)=>{
-					this.videos = res.data.data.reverse()
+				this.$axios.get("/strong_portal_site/video/selectVideoList")
+				.then((res)=>{
+					this.videos = res.data.resultObj.videoList;
 				})
 			},
 			tolinkV(id){

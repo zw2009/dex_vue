@@ -4,7 +4,7 @@
 		</article>
 		<!--<el-button plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button>-->
 		<div class="qq_conent">
-			<h1>{{text.title}}  </h1>
+			<h1>{{text.title}}</h1>
 			<div class="content-article" v-html="text.content">
 				
 			</div>
@@ -24,19 +24,13 @@
 		},
 		methods:{
 			getText(){
-				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
-					dictId :201907020929450000,
+				this.$axios.post("/strong_portal_site/article/selectArtileById",{
+					articleId :this.id,
 					status :1
 				})
 				.then((res)=>{
-					let data = res.data.resultObj.articlList;
-					//console.log(data)
-					data.forEach((v,i)=>{
-						if(this.id == v.articleId){
-							this.text = v;
-							console.log(v)
-						}
-					});
+					var res = res.data.resultObj.articlList;
+					this.text = res;
 				})
 			}
 		},

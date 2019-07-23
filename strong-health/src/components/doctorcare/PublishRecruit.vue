@@ -22,6 +22,9 @@
 							<el-option label="兼职" value="兼职"></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="是否发布">
+					    <el-switch v-model="ruleForm.delivery"></el-switch>
+					</el-form-item>
 					<el-form-item label="职位福利" prop="type" v-if="quan">
 						<el-checkbox-group v-model="ruleForm.type">
 							<el-checkbox label="五险一金" name="type"></el-checkbox>
@@ -140,6 +143,7 @@
 					region: '',
 					num: '',
 					pullprat: '',
+					delivery:true,
 					type: [],
 					type1: [],
 					through: '',
