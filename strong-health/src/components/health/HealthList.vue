@@ -3,7 +3,7 @@
 		<div class="banner3">
 
 		</div>
-		<el-button style="margin-bottom: 20px;"><router-link to="/">返回上一页</router-link></el-button>
+		<!--<el-button style="margin-bottom: 20px;"><router-link to="/">返回上一页</router-link></el-button>-->
 		<div class=" clearfix">
 			<!--左边切换-->
 			<div class="leftLabel pull-left">
@@ -18,25 +18,7 @@
 			<div class="contentWrap pull-left pagination-nick">
 				
 				<router-view></router-view>
-				<!--1-->
-				<!--<div class="newestArticleList main-box-nick">
-					<div class="thinkTankTag clearfix">
-						<div class="img pull-left">
-							<img src="https://imgcache.iyiou.com/Cover/2017-11-01/hangye-yiliaoqixie.jpg">
-						</div>
-						<div class="text pull-right">
-							<h2>“内外承压”的维力医疗新设公司，欲增加国内医疗器械市场份额</h2>
-							<div class="box-lables clearfix">
-								<div class="typeName pull-left">
-									<span class="name">胡敏</span>
-								</div>
-								<div class="fr pull-right">
-									<div class="time">2019-05-27</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>-->
+				
 			</div>
 			<div class="rightLabel pull-right">
 				<!--1-->
@@ -47,12 +29,10 @@
 					</h2>
 					<div class="flashListWrap">
 						<ul class="scrollbar scroll">
-							<a href="" target="_blank">
-								<li class="blue">
-									<p>礼来以10亿美元对价获得一款I期疼痛药物全球商业权利</p>
-									<span>1小时前</span>
-								</li>
-							</a>
+							<li class="blue" v-for="n in linenews">
+								<p>{{n.title}}</p>
+								<!--<span>1小时前</span>-->
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -63,10 +43,10 @@
 	
 
 <script>
-	import newslist from "@/components/health/NewsList"
+
 	export default{
 		components:{
-			newslist
+	
 		},
 		data(){
 			return {
@@ -76,10 +56,11 @@
 					{id:3,title:"生活养生",to:"liftlist"},
 				],
 				num:0, 
+				linenews:[]
 			}
 		},
 		created(){
-			//this.getLink()
+			this.getlinenew()
 		},
 		methods:{
 			chang(index,id){
@@ -94,6 +75,16 @@
 				this.$route.query.id;
 				alert(this.$route.query.id);
 				
+			},
+			getlinenew(){
+				//行业新闻
+				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
+					dictId :201907020930290000,
+					status :1
+				})
+				.then((res)=>{
+					this.linenews = res.data.resultObj.articlList;
+				})
 			}
 		}
 	}

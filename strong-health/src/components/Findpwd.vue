@@ -65,32 +65,31 @@
 				let phone = this.$refs.phone.value;
 				let pwd = this.$refs.pwd.value;
 				let repwd = this.$refs.repwd.value;
+				let code = this.$refs.code.value
 				var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
 				if (phone == "" || !myreg.test(phone)){
-					alert("请输入正确的手机号码");
+					this.$message.error("请输入正确的手机号码");
 				}else if(pwd == ""){
-					alert("请输入密码");
+					this.$message.error("请输入密码");
 				}else if(pwd != repwd){
-					alert("两次输入密码不一致");
+					this.$message.error("两次输入密码不一致");
+				}else if(code == ""){
+					this.$message.error("请输入验证码");
 				}else{
-					let isCodeOk = this.getCodeValue();
-					this.$router.push({path:'/login'});
-					/*if(isCodeOk){
-						//提交信息到后台
-						this.$axios.post("127.0.0.1:8080/findpwd",{
-							phone:phone,
-							passwad:pwd
-						}).then((res)=>{
-							if(res.data.status == "0"){
-								alert("密码修改成功");
-								this.$router.push({path:'/login'});
-							}
-						})
-					}*/
+					//提交信息到后台
+					this.$axios.post("/strong_portal_site/user/updataPassword",{
+						loginName:phone,
+						newPassword:pwd,
+						code:code
+					}).then((res)=>{
+						if(res.data.resultCode == "1"){
+							this.$message({message:"密码修改成功",type:"success"});
+							this.$router.push({path:'/login'});
+						}else{
+							this.$message.error("信息填写不正确");
+						}
+					})
 				}
-				
-				
-				
 			},
 			changeBtn(){
 				var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
@@ -104,37 +103,35 @@
 			getCode(){
 				this.isrefreshpic = true;
 				if(this.isrefreshpic){
-					let sj = Math.ceil(Math.random(10+1)*1000000);
-					window.localStorage.setItem("code",sj);
-					console.log(sj);
-					this.time = 10;
-					var timer = setInterval(()=>{
-						this.time -- ;
-						if(this.time < 0){
-							clearInterval(timer);
-							this.btnBoolen = false;
-							this.btnValue = "获取验证码";
+					let phone = this.$refs.phone.value; 
+					this.$axios.post("/strong_portal_site/code/updataPasswordCode",{
+						phone:phone
+					}).then((res)=>{
+						if(res.data.resultCode == '1'){
+							this.$message({
+								message:"验证码发送成功",
+								type:"success"
+							});
+							this.send();
 						}else{
-							this.btnBoolen = true;
-							this.btnValue = "还有"+this.time+"s后重新获取";
+							this.$message.error(res.data.resultMessage);
 						}
-					},1000);
+					})
 				}
-				
 			},
-			getCodeValue(){
-				let code = this.$refs.code.value;
-				let codes = window.localStorage.getItem("code");
-				console.log(code,codes);
-				if(code == ""){
-					alert("请输入短信验证码");
-				}else if (code == codes){
-					console.log("验证码输入正确");
-					return true;
-				}else{
-					alert("验证码不正确");
-					return false;
-				}
+			send(){
+				this.time = 10;
+				var timer = setInterval(()=>{
+					this.time -- ;
+					if(this.time < 0){
+						clearInterval(timer);
+						this.btnBoolen = false;
+						this.btnValue = "获取验证码";
+					}else{
+						this.btnBoolen = true;
+						this.btnValue = "还有"+this.time+"s后重新获取";
+					}
+				},1000);
 			}
 		}
 	}

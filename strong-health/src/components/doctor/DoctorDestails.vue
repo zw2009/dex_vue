@@ -2,10 +2,10 @@
 	<div class="doctor-details container">
 		<article class="banner banner1">
 		</article>
-		<el-button plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button>
+		<!--<el-button plain><a href="javascript:window.history.go(-1);">返回上一页</a></el-button>-->
 		<div class="qq_conent">
 			<h1>{{text.title}}  </h1>
-			<div class="content-article" v-html="text.contenta">
+			<div class="content-article" v-html="text.content">
 				
 			</div>
 		</div>
@@ -24,10 +24,15 @@
 		},
 		methods:{
 			getText(){
-				this.$axios.get("../../static/json/pictext.json").then((res)=>{
-					let data = res.data.data;
+				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
+					dictId :201907020929450000,
+					status :1
+				})
+				.then((res)=>{
+					let data = res.data.resultObj.articlList;
+					//console.log(data)
 					data.forEach((v,i)=>{
-						if(this.id == v.id){
+						if(this.id == v.articleId){
 							this.text = v;
 							console.log(v)
 						}

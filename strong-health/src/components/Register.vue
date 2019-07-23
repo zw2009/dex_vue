@@ -69,7 +69,6 @@
 		data(){
 			return{
 				showCompy:false,
-//				changCom:'',
 				isrefreshpic:false,//判断是否发送验证码
 				time:0,//定时器初始值
 				btnBoolen:true,//disabled的初始值
@@ -97,15 +96,17 @@
 					let changCom = this.$refs.changCom.value; //判断是个人还是企业：3为个人2为企业
 					var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
 					if(this.showCompy == true && CompanyName == ""){
-						alert("请输入企业名称");
+						this.$message.error("请输入企业名称");
 					}else if(phone == "" || !myreg.test(phone)){
-						alert("请输入正确的手机号码");
+						this.$message.error("请输入正确的手机号码");
 					}else if(user == ""){
-						alert("请输入用户名");
-					}else if(pwd == ""){
-						alert("请输入密码");
+						this.$message.error("请输入用户名");
+					}else if(pwd.length < 6){
+						this.$message.error("请输入不少于6位数的密码");
 					}else if(pwd != repwd){
-						alert("两次输入密码不一致")
+						this.$message.error("两次输入密码不一致")
+					}else if(code == ""){
+						this.$message.error("请输入验证码")
 					}else{ 
 							this.$axios.post('/strong_portal_site/user/userRegister',{
 								loginName:phone,
@@ -121,6 +122,8 @@
 							          type: 'success'
 							        });
 							        this.$router.push({path:'/login'});
+								}else{
+									this.$message.error("信息填写不正确");
 								}
 							})
 							
@@ -141,27 +144,29 @@
 						          message: res.data.resultMessage,
 						          type: 'success'
 						        });
+						        this.send();//验证码倒计时
 							}else{
 								this.$message.error(res.data.resultMessage);
 							}
 							
-						}).catch((err)=>{
-							console.log(err)
 						})
-						//设置定时器
-						this.time = 120;
-						let timer = setInterval(()=>{
-							this.time--;
-							if (this.time < 0) {
-								clearInterval(timer);
-								this.btnBoolen = false;
-								this.btnValue = "获取短信验证码";
-							}else{
-								this.btnBoolen = true;
-								this.btnValue = "还有"+this.time+"s重新获取";
-							} 
-						},1000);
+						
 					}
+				},
+				send(){
+					//设置定时器
+					this.time = 120;
+					let timer = setInterval(()=>{
+						this.time--;
+						if (this.time < 0) {
+							clearInterval(timer);
+							this.btnBoolen = false;
+							this.btnValue = "获取短信验证码";
+						}else{
+							this.btnBoolen = true;
+							this.btnValue = "还有"+this.time+"s重新获取";
+						} 
+					},1000);
 				},
 				btnYes(){//获取验证码的btn启用
 					//因为是从零开始所以当输入10位手机号码之后启用btn按钮

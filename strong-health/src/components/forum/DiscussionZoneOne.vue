@@ -19,7 +19,6 @@
 		    <el-table
 			   :data="data.slice((currentPage-1)*pagesize, currentPage*pagesize)"
 			   stripe
-			    border
 			    style="width: 100%">
 			    <el-table-column
 	                  type=""
@@ -27,7 +26,7 @@
 	                			  顶
                 </el-table-column>
                 <el-table-column
-	                  prop="name"
+	                  prop="title"
 	                  label="排序"
 	                  sortable
 	                  width="600">
@@ -35,15 +34,25 @@
                 <el-table-column
 	                  prop="name"
 	                  label="作者"
-	                  width="190">
+	                  width="90">
                 </el-table-column>
-                <el-table-column class="text-center"
-	                  prop="name"
-	                  label="回复/点击"
+                <el-table-column
+	                  prop="time"
+	                  label="发表时间"
 	                  width="100">
                 </el-table-column>
+                <el-table-column class="text-center"
+	                  prop="answer"
+	                  label="回复"
+	                  width="50">
+                </el-table-column>
+                <el-table-column class="text-center"
+	                  prop="click"
+	                  label="点击"
+	                  width="50">
+                </el-table-column>
                 <el-table-column  class="text-center"
-	                  prop="name"
+	                  prop="response"
 	                  label="最后回复"
 	                  width="160">
                 </el-table-column>
@@ -55,7 +64,7 @@
 			        :current-page.sync="currentPage"
 			        :page-size="5"
 			        layout="sizes, prev, pager, next"
-			        :page-sizes="[2, 5, 10, 20]"
+			        :page-sizes="[10, 20, 30, 40]"
 			        :total="data.length">
 			</el-pagination>
 		  </el-tab-pane>
@@ -68,43 +77,49 @@
         data() {
           return {
            	currentPage: 1,
-      		pagesize: 5,
-      		data:[{name:"11111"},
-      		{name:"111211"},
-      		{name:"111311"},
-      		{name:"111411"},
-      		{name:"11511"},
-      		{name:"117111"},
-      		{name:"111611"},
-      		{name:"111811"},
-      		{name:"111111"},
-      		{name:"111911"},
-      		{name:"111211"},
-      		{name:"111311"},
-      		{name:"111411"},
-      		{name:"111511"},
-      		{name:"111611"},
-      		{name:"111711"}]
-        }
+      		pagesize: 10,
+      		data:[
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI1！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+      		{title:"【病例征集】优质病例可入选「丁香病例库」，还有机会发SCI2！",name:"张三",time:"2019-06-15",answer:"22",click:"200",response:"李四"},
+        	]
+    	}
     },
     methods: {
     handleSizeChange: function (size) {
-      this.pagesize = size
-    },
-    handleCurrentChange: function (currentPage) {
-      this.currentPage = currentPage
-    }
-  },
+	      this.pagesize = size
+	    },
+	    handleCurrentChange: function (currentPage) {
+	      this.currentPage = currentPage
+	    }
+	  },
         
  }
 </script>
 
 <style scoped>
-.neike{
-	padding-bottom: 30px;
-}
+
 .discussin-zone-one{
-	margin-top: 70px;
+	margin-top: 62px;
+	height: 705px;
 }	
 .grid-content{
 	line-height: 33px;
@@ -113,12 +128,19 @@
 	text-align: right;
 }
 .text{
-	padding-bottom: 20px;
 }
 >>>.el-table th {
     padding: 0px 0;
 }
 >>>.text-center{
 	text-align: center;
+}
+>>>.el-pagination {
+    white-space: nowrap;
+    padding: 2px 5px;
+    color: #303133;
+    font-weight: 700;
+    margin-top: 20px;
+    text-align: center;
 }
 </style>

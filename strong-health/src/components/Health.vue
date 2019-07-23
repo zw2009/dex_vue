@@ -16,21 +16,21 @@
 						<div class="pull-left newsleft">
 							<ul>
 								<li v-for="v in newlists">
-									<div @click="todetails(v.id,0,0)">
+									<div @click="todetails(v.articleId)">
 										<h3 class="textover">{{v.title}}</h3>
-										<p class="textover">{{v.subtitle}}</p>
+										<p class="textover">{{v.description}}</p>
 									</div>
 								</li>
 							</ul>
 						</div>
 						<!--右边轮播图-->
 						<div class="pull-right news-banner">
-							<div class="block">
+							<div class="block" >
 								<span class="demonstration" style="width: 580px;display: block;"></span>
-								<el-carousel trigger="click" height="300px">
-									<el-carousel-item v-for="item in banners" :key="item.img">
-										<h3>{{ item.title }}标题</h3>
-										<div @click="todetails(item.id,0)"><img :src="item.img" alt="" width="100%" height="300" /></div>
+								<el-carousel trigger="click" height="300px" >
+									<el-carousel-item v-for="v in banners" :key="v.img" style="cursor: pointer;"  @click.native="todetails(v.articleId)">
+										<h3 class="textover">{{ v.title }}</h3>
+										<img :src="v.imgUrl" alt="" width="100%" height="300" />
 									</el-carousel-item>
 								</el-carousel>
 							</div>
@@ -44,7 +44,7 @@
 							<ul id="inside_slide" class="" style="width:2254px; left: 100px;" :style="{'left':nleft + 'px','transition':' all 2s'}">
 								<li v-for="v in diseaseList">
 									<div class="openclass_img">
-										<span @click="todetails(0,v.id)"><img :src="v.img" /></span>
+										<span @click="todetails(v.articleId)"><img :src="v.imgUrl" /></span>
 									</div>
 									<p class="textover">{{v.title}}</p>
 								</li>
@@ -60,14 +60,14 @@
 							<ul class="column_content_ul">
 								<li v-for="v in lifeLists">
 									<div class="column_content_info pull-left">
-										<div @click="todetails(0,0,v.id)">
+										<div @click="todetails(v.articleId)">
 											<h4>{{v.title}}</h4>
-											<p class="textover2">{{v.subtitle}}</p>
-											<span>{{v.time}}</span>
+											<p class="textover2">{{v.description}}</p>
+											<span>{{GetDateStr(v.update_time)}}</span>
 										</div>
 									</div>
 									<div class="column_content_img pull-right">
-										<img :src="v.img" />
+										<img :src="v.imgUrl" />
 									</div>
 								</li>
 							</ul>
@@ -75,7 +75,7 @@
 						<div class="column_right pull-left">
 							<h3>行业新闻<i></i><router-link :to="{name:'diseaselist'}">更多</router-link></h3>
 							<ul>
-								<li v-for="v in lineNews" @click="todetails(0,0,0,v.id)">
+								<li v-for="v in lineNews" @click="todetails(v.articleId)">
 									<a class="textover">{{v.title}}</a>
 								</li>
 							</ul>
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+	
 	export default {
 		name: 'health',
 		data() {
@@ -124,36 +125,42 @@
 		},
 		created(){
 			//新闻资讯
-			this.$axios.get("../../static/json/health/news.json")
+			this.$axios.post("/strong_portal_site/article/selectArtileList")
 			.then((res)=>{
-				var res= res.data.data;
-				var data = res.slice(0,4);
-				var data2 = res.slice(4,8)
-				this.newlists = data.reverse();
-				this.banners = data2.reverse();
+				console.log(res)
+//				if(res.data.resultCode == "1"){
+					this.newlists = res.data.resultObj.newsList.slice(0,4);//新闻资讯
+					this.banners = res.data.resultObj.newsList.slice(5,8);//banner
+					console.log(this.banners)
+
+
+					this.diseaseList = res.data.resultObj.diseaseList;
+
+		
+					this.lifeLists = res.data.resultObj.LifeList;
+			
+			
+					this.lineNews = res.data.resultObj.industryList;
+//				}
 			})
-			//疾病诊疗			
-			this.$axios.get("../../static/json/health/disease.json")
-			.then((res)=>{
-				var res= res.data.data;
-				var data = res.slice(0,8);
-				this.diseaseList = data.reverse();
-			});
-			//生活养生		
-			this.$axios.get("../../static/json/health/life.json")
-			.then((res)=>{
-				var res= res.data.data;
-				var data = res.slice(0,3);
-				this.lifeLists = data.reverse();
-			});
-			this.$axios.get("../../static/json/health/lineNews.json")
-			.then((res)=>{
-				var res= res.data.data;
-				var data = res.slice(0,9);
-				this.lineNews = data.reverse();
-			})
+			
+				
+
+			
+			this.postdata();
 		},
 		methods: {
+			//存储对象
+			postdata(){
+				
+				var userEntity = {
+			    name: 'tom',
+			    age: 22
+				};
+				sessionStorage.setItem("news",JSON.stringify(userEntity))
+				
+				
+			},
 			clickLeft() {
 				this.nleft += 1112;
 				if(this.nleft == 1112) {
@@ -173,18 +180,11 @@
 						id:id
 					}
 				})
-			},
-			todetails(nid,did,lid,lnid){
-				this.$router.push({
-					name:'healthdetails',
-					query:{
-						nid:nid,
-						did:did,
-						lid:lid,
-						lnid:lnid
-					}
-				})
 			}
+			
+		},
+		beforeDestroy(){
+			console.log(111)
 		}
 	}
 </script>
@@ -452,7 +452,6 @@ ul.column_content_ul li .column_content_info h4 {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 8px 0;
 }
 
 ul.column_content_ul li .column_content_info p {

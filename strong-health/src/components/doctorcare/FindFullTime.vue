@@ -71,7 +71,6 @@
 				})
 				.then((res)=>{
 					this.fulls = res;
-					this.total = res.length;
 					
 					console.log(this.fulls)
 				})

@@ -1,36 +1,18 @@
 <template>
 	<div class="newslist">
-		<div class="newestArticleList main-box-nick">
+		<div class="newestArticleList main-box-nick" v-for="n in news" @click="todetails(n.articleId)">
 			<div class="thinkTankTag clearfix">
 				<div class="img pull-left">
-					<img src="https://imgcache.iyiou.com/Cover/2017-11-01/hangye-yiliaoqixie.jpg">
+					<img :src="n.imgUrl">
 				</div>
 				<div class="text pull-right">
-					<h2>“内外承压”的维力医疗新设公司，欲增加国内医疗器械市场份额</h2>
+					<h2>{{n.title}}</h2>
 					<div class="box-lables clearfix">
 						<div class="typeName pull-left">
-							<span class="name">胡敏</span>
+							<span class="name">{{n.copyfrom}}</span>
 						</div>
 						<div class="fr pull-right">
-							<div class="time">2019-05-27</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="newestArticleList main-box-nick">
-			<div class="thinkTankTag clearfix">
-				<div class="img pull-left">
-					<img src="https://imgcache.iyiou.com/Cover/2017-11-01/hangye-yiliaoqixie.jpg">
-				</div>
-				<div class="text pull-right">
-					<h2>“内外承压”的维力医疗新设公司，欲增加国内医疗器械市场份额</h2>
-					<div class="box-lables clearfix">
-						<div class="typeName pull-left">
-							<span class="name">胡敏</span>
-						</div>
-						<div class="fr pull-right">
-							<div class="time">2019-05-27</div>
+							<div class="time">{{GetDateStr(n.update_time)}}</div>
 						</div>
 					</div>
 				</div>
@@ -38,12 +20,13 @@
 		</div>
 		<div class="block phonage">
 		    <span class="demonstration"></span>
-		    <el-pagination @size-change="handleSizeChange"@current-change="handleCurrentChange"
-		      :current-page="currentPage4"
+		    <el-pagination
+		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
 		      :page-sizes="[10, 20, 30, 40]"
-		      :page-size="100"
-		      layout="total, sizes, prev, pager, next, jumper"
-		      :total="400">
+		      :page-size="pageSize"
+		      layout="total, prev, pager, next"
+		      :total="total">
 		    </el-pagination>
 		</div>
 	</div>
@@ -51,27 +34,53 @@
 
 <script>
 	export default {
-    methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      }
-    },
-    data() {
-      return {
-      	total:'0',
-        currentPage1: 5,
-        currentPage2: 5,
-        currentPage3: 5,
-        currentPage4: 4
-      };
-    }
-  }
+		data() {
+		  return {
+		  	total:1000, //默认数据总条数
+			pageSize:10, //每页的数据条数
+			currentPage:1, //当前页
+			news:[] //返回数据
+		  }
+		},
+		methods:{
+			//点击下一页和点击页码时执行
+			handleCurrentChange(val){ //当前页currentPage
+				this.getnews(val);
+			},
+			getnews(val){
+				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
+					dictId :201907020922390000,
+					status :1,
+					pageNo:val,
+					pageSize:this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.news = res.data.resultObj.articlList;
+					}
+				})
+			}
+		},
+		created(){
+			this.$axios.post("/strong_portal_site/article/selectArtileByType",{
+					dictId :201907020922390000,
+					status :1,
+					pageNo:this.currentPage,
+					pageSize:this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.news = res.data.resultObj.articlList;
+						this.total = res.data.resultObj.totalSize;
+					}
+				})
+		}
+  	}
 </script>
 
 <style scoped="">
+	
+
 	.el-pagination{
 		width: 100%;
     	text-align: center;

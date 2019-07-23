@@ -36,32 +36,45 @@
 	</div>
 </template>
 
-<script>
+<script> 
+	import { mapMutations  } from 'vuex'
 	export default{
 		data(){
 			return {
-				
+				userToken:''
 			}
 		},
 		methods:{
+			...mapMutations(['changeLogin']),
+			
+			
+			
+			
 			login(){
+				let _this=this;
 				let phone = this.$refs.phone.value;
 				let pwd = this.$refs.pwd.value;
 				var myreg = /^0?(13[0-9]|14[5-9]|15[012356789]|166|17[0-8]|18[0-9]|19[8-9])[0-9]{8}$/; //手机号码验证
 				if(phone == '' || !myreg.test(phone)){
-					alert("请输入正确的手机号码");
+					this.$message.error("请输入正确的手机号码");
 				}else if(pwd == ""){
-					alert("请输入密码");
+					this.$message.error("请输入密码");
 				}else{
 					this.$axios.post("/strong_portal_site/user/userLogin",{
 						loginName:phone,
 						password:pwd
-					}).then((res)=>{
+					},
+					{
+		              "Authorization":""
+		            }).then((res)=>{
 						if(res.data.resultCode == "1"){
 							this.$message({
 					          message: '登陆成功',
 					          type: 'success'
         					});
+        					 _this.userToken=res.data.token;
+        					  console.log(this.userToken)//获取到的token
+        					 _this.changeLogin({ Authorization: this.userToken });
 							this.$router.push({path:'/'});
 						}else{
 							this.$message.error({

@@ -1,12 +1,14 @@
 <template>
 	<div class="healthdetails container">
 		<div class="banner3"></div>
-		<el-button><router-link to="/">返回上一页</router-link></el-button>
+		<!--<el-button><router-link to="/">返回上一页</router-link></el-button>-->
 			<div class="qq_conent container">
 				<h1>{{blog.title}}</h1>
 				<div class="content-article" v-html="blog.content">
 					
+					
 				</div>
+				<p class="reprintAddress">来源地址:<a :href="blog.reprintAddress" target="_blank"> {{blog.reprintAddress}}</a></p>
 			</div>
 	</div>
 </template>
@@ -16,62 +18,36 @@
 		data(){
 			return {
 				nid:this.$route.query.nid,
-				did:this.$route.query.did,
-				lid:this.$route.query.lid,
-				lnid:this.$route.query.lnid,
 				blog:{}
 			}
 		},
 		created(){
-			this.$axios.get('../../static/json/health/news.json')
+			console.log(this.nid)
+			this.$axios.post('/strong_portal_site/article/selectArtileById',{
+				articleId:this.nid
+			})
 			.then((res)=>{
-				var res = res.data.data;
-				res.forEach((v,i)=>{
-					if(this.nid == v.id){
-						this.blog = v ;
-						//console.log(this.blog)
-					}
-				})
-			});
-			this.$axios.get('../../static/json/health/disease.json')
-			.then((res)=>{
-				var res = res.data.data;
-				res.forEach((v,i)=>{
-					if(this.did == v.id){
-						this.blog = v ;
-						//console.log(this.blog)
-					}
-				})
-			});
-			this.$axios.get('../../static/json/health/life.json')
-			.then((res)=>{
-				var res = res.data.data;
-				res.forEach((v,i)=>{
-					if(this.lid == v.id){
-						this.blog = v ;
-						//console.log(this.blog)
-					}
-				})
-			});
-			this.$axios.get('../../static/json/health/lineNews.json')
-			.then((res)=>{
-				var res = res.data.data;
-				res.forEach((v,i)=>{
-					if(this.lnid == v.id){
-						this.blog = v ;
-						//console.log(this.blog)
-					}
-				})
-			});
-			
-		},
-		updated(){
-			
+				var res = res.data.resultObj.articlList;
+				this.blog = res;
+				console.log(this.nid) 
+				console.log(res) 	
+//				res.forEach((v,i)=>{
+//					if(this.nid == v.articleId){
+//						this.blog = v;
+//						console.log(this.blog) 	
+//					}
+//				})
+			})
 		}
 	}
+	
+	
 </script>
 
 <style scoped="">
+.reprintAddress{
+	text-indent:2em;
+}
 .healthdetails a{
 	padding: 20px;
 }

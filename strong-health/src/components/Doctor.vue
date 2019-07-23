@@ -11,21 +11,16 @@
 					<p class="el-icon-caret-right"></p>
 					<h4>{{video.name}}</h4>
 				</div>
-		
-			<!--<video width="320" height="240" controls>
-			   
-			    <source src="movie.ogg" type="video/ogg">
-			    您的浏览器不支持 video 标签。
-			</video>-->
+			   <!-- <source src="movie.ogg" type="video/ogg">-->
 		</div>
 		<div class="container vievone" id="pictextall">
 			<h2>图文专区 <router-link :to="{name:'doctorpro'}">more>></router-link></a></h2>
-			<div class="row pictext" v-for="t in texts"  @click="tolink(t.id)">
+			<div class="row pictext" v-for="t in texts"  @click="tolink(t.articleId)">
 				<h3>{{t.title}}</h3>
-				<p class="text-primary branch-name">{{t.content}}</p>
-				<div class="col-xs-12 imgflex">
-					<a href="#" class="thumbnail" v-for="v in t.images">
-						<img :src="v.src" alt="...">
+				<p class="text-primary branch-name" >{{t.description}}</p>
+				<div class="col-xs-12 imgflex" v-show="t.imgUrl != ''">
+					<a href="#" class="thumbnail">
+						<img :src="t.imgUrl">
 					</a>
 				</div>
 			</div>
@@ -43,20 +38,22 @@
 		},
 		methods:{
 			tolink(id){
-				this.$router.push({
+				let routeData = this.$router.resolve({
 			          path: 'doctordestails',
 			          query: {
 			            id: id
 			          }
 			       });
+			       window.open(routeData.href,"_blank");
 			},
 			tolinkV(id){
-				this.$router.push({
+				let routeData = this.$router.resolve({
 					name:"doctorvideoDetails",
 					query:{
 						id:id
 					}
 				});
+				window.open(routeData.href,"_blank");
 			},
 			getVideos(){
 				this.$axios.get("../../static/json/video.json")
@@ -65,13 +62,16 @@
 				})
 			},
 			getPicText(){
-				this.$axios.get("../../static/json/pictext.json").then((res)=>{
-					
-					let data = res.data.data.reverse();
-					this.texts =  data.slice(0,3);
-					console.log(this.texts);
+				//生活养生		
+				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
+					dictId :201907020929450000,
+					status :1
 				})
-			}
+				.then((res)=>{
+					this.texts = res.data.resultObj.articlList;
+					console.log(this.texts)
+				});
+				}
 		},
 		created(){
 			this.getVideos();
