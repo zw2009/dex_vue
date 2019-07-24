@@ -1,13 +1,12 @@
 <template>
 	<div class="doctor-pro">
-		<article class="banner banner1">
+		<!--<article class="banner banner1">
 			<h2>图文专区列表</h2>
-		</article>
-
+		</article>-->
 		<div class="container vievone" id="pictextall">
 			<h2>图文专区<a href="javascript:history.go(-1)">返回上一页</a></h2>
 			<div class="row pictext" v-for="t in texts" @click="tolink(t.articleId)">
-				<h3>{{t.texts}}</h3>
+				<h3>{{t.title}}</h3>
 				<p class="text-primary branch-name textover3">{{t.description}}</p>
 				<div class="col-xs-12 imgflex" v-if="t.imgUrl != ''">
 					<a class="thumbnail">
@@ -16,6 +15,16 @@
 				</div>
 			</div>
 		</div>
+		<div class="block">
+		    <span class="demonstration"></span>
+		    <el-pagination
+		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
+		      :page-size="pageSize"
+		      layout="total, prev, pager, next, jumper"
+		      :total="400">
+		    </el-pagination>
+		  </div>
 	</div>
 </template>
 
@@ -23,10 +32,16 @@
 	export default {
 		data(){
 			return{
-				texts:[]
+				texts:[],
+				total:300,      //总页数
+				currentPage:1,  //当前页
+				pageSize:5,    //每页数量
 			}
 		},
 		methods:{
+			handleCurrentChange(val){
+				alert("页面跳转"+val)
+			},
 			tolink(id){
 				let routeData = this.$router.resolve({
 			          path: 'doctordestails',
@@ -39,7 +54,7 @@
 			getPicText(){
 				//图文专区	
 				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
-					dictId :201907020929450000,
+					dictId :201907020931160000,
 					status :1
 				})
 				.then((res)=>{
@@ -55,8 +70,12 @@
 </script>
 
 <style scoped="">
+.block{
+	text-align: center;
+	margin-bottom:36px ;
+}
 .doctor-pro{
-	margin-top: 70px;
+	margin-top: 50px;
 }
 .vievone {
 	margin-bottom:30px;
@@ -97,7 +116,9 @@
 .pictext:last-child{
 	border-bottom:none;
 }
-
+.pictext h3{
+	padding-bottom: 14px;
+}
 /*图文专区图片弹性布局*/
 
 .imgflex {

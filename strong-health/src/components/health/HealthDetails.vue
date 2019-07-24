@@ -8,7 +8,9 @@
 					
 					
 				</div>
-				<p class="reprintAddress">来源地址:<a :href="blog.reprintAddress" target="_blank"> {{blog.reprintAddress}}</a></p>
+				<p class="reprintAddress" style="font-size: 16px;">来源地址:
+					<a style="font-size:16px;" :href="blog.reprintAddress" target="_blank"> {{blog.reprintAddress}}</a>
+				</p>
 			</div>
 	</div>
 </template>
@@ -36,9 +38,6 @@
 </script>
 
 <style scoped="">
-.reprintAddress{
-	text-indent:2em;
-}
 .healthdetails a{
 	padding: 20px;
 }

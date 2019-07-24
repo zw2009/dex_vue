@@ -127,20 +127,12 @@
 			//新闻资讯
 			this.$axios.post("/strong_portal_site/article/selectArtileList")
 			.then((res)=>{
-				console.log(res)
 //				if(res.data.resultCode == "1"){
 					this.newlists = res.data.resultObj.newsList.slice(0,4);//新闻资讯
 					this.banners = res.data.resultObj.newsList.slice(5,8);//banner
-					console.log(this.banners)
-
-
-					this.diseaseList = res.data.resultObj.diseaseList;
-
-		
-					this.lifeLists = res.data.resultObj.LifeList;
-			
-			
-					this.lineNews = res.data.resultObj.industryList;
+					this.diseaseList = res.data.resultObj.diseaseList; //疾病诊疗
+					this.lifeLists = res.data.resultObj.LifeList; //生活养生
+					this.lineNews = res.data.resultObj.industryList;  //行业新闻
 
 		})
 		},

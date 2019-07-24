@@ -6,12 +6,12 @@
 				   stripe
 				    style="width: 100%">
 		                <el-table-column
-		                  prop="job"
+		                  prop="positionLabel"
 		                  label="职位名"
 		                  width="180">
 		                </el-table-column>
 		                 <el-table-column
-		                  prop="firm"
+		                  prop="companyName"
 		                  label="公司名"
 		                  width="238">
 		                </el-table-column>
@@ -21,12 +21,13 @@
 		                  width="180">
 		                </el-table-column>
 		                 <el-table-column
-		                  prop="pay"
+		                  prop="salaryLabel"
 		                  label="薪资"
 		                  width="180">
 		                </el-table-column>
 		                <el-table-column
-		                  prop="time"
+		                  prop="updateTime"
+		                  :formatter="getLocalTimes"
 		                  label="发布时间"
 		                  width="180">
 		                </el-table-column>
@@ -37,17 +38,16 @@
 		                   <el-button type="primary" size="mini">投递简历</el-button>
 	                	</el-table-column>
 				</el-table>
-				<el-col :span="24" class="toolbar pageBar">
+				<div class="block">
+				    <span class="demonstration"></span>
 				    <el-pagination
-				    
-				    @current-change="handleCurrentChange"
-				    :current-page="currentPage"
-				    :page-sizes="[10, 20, 30, 40]"
-				    :page-size="pageSize"
-				    layout=" prev, pager, next, total"
-				    :total="total">
+				      @current-change="handleCurrentChange"
+				      :current-page="currentPage"
+				      :page-size="pageSize"
+				      layout="total, prev, pager, next, jumper"
+				      :total="total">
 				    </el-pagination>
-				</el-col>
+				  </div>
 		</div>
 	</div>
 </template>
@@ -57,31 +57,54 @@
 		name:'find-part',
 		data(){
 			return{
-				total:1000,//默认数据总条数
+				total:0,//默认数据总条数
 				pageSize:10,//每页的数据条数
 				currentPage:1,//默认开始页
 				fulls:[]
 			}
 		},
 		methods:{
-			getUser:function(){
-				this.$axios.get('../../static/json/fulls.json')
-				.then((res)=>{
-					return res.data.data;
-				})
-				.then((res)=>{
-					this.fulls = res;
-					this.total = res.length;
-					
-					console.log(this.fulls)
-				})
+			getLocalTimes(row) { 
+				let date = new Date(row.updateTime);
+				let year = date.getFullYear();
+				let month = date.getMonth()+1;
+				let day = date.getDate();
+				month = month < 10 ? "0"+month:month;
+				day = day < 10 ? "0"+day:day;
+				date = year+'-'+month+'-'+day;
+				//console.log(date); // 2018-10-09
+				return date;
 			},
-			handleCurrentChange(currentPage){
-				this.currentPage = currentPage;
+			handleCurrentChange(val){
+				this.getUser(val);
+			},
+			getUser(val){
+				this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
+					recruitType : 2,
+					status : 1,
+					pageNo:val ,
+					pageSize : this.pageSize
+				})
+				.then((res)=>{
+					this.fulls = res.data.resultObj.recruitList;
+				})
 			}
 		},
 		created(){
-			this.getUser();
+			this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
+					recruitType : 2,  //兼职简历的类型
+					status : 1, //状态
+					pageNo:this.currentPage ,
+					pageSize : this.pageSize
+				})
+				.then((res)=>{
+					console.log(res)
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.fulls = res.data.resultObj.recruitList;
+						console.log(this.fulls)
+					}
+				})
 		}
 	}
 </script>
@@ -95,7 +118,7 @@
 }
 >>>.el-pagination {
     white-space: nowrap;
-    padding: 12px 5px;
+    padding: 22px 5px;
     color: #303133;
     font-weight: 700;
     text-align: center;

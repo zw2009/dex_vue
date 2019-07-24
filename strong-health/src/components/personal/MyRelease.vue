@@ -20,8 +20,10 @@
 						<div class="rigtit leftit">
 							<div class="showpop">
 								<p class="text-success">全职</p>
+								<p><a>显示中</a></p>
 								<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
 							</div>
+							
 							<div class="delete">
 								<p>
 									<a class="revise" href="javascript:void(0)">修改</a>
@@ -49,6 +51,7 @@
 						<div class="rigtit leftit">
 							<div class="showpop">
 								<p class="text-success">兼职</p>
+								<p><a>未显示</a></p>
 								<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
 							</div>
 							<div class="delete">

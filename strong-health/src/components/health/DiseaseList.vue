@@ -18,17 +18,16 @@
 				</div>
 			</div>
 		</div>
-		<div class="block phonage">
+		<div class="block">
 		    <span class="demonstration"></span>
 		    <el-pagination
 		      @current-change="handleCurrentChange"
 		      :current-page="currentPage"
-		      :page-sizes="[10, 20, 30, 40]"
 		      :page-size="pageSize"
-		      layout="total, prev, pager, next"
+		      layout="total, prev, pager, next, jumper"
 		      :total="total">
 		    </el-pagination>
-		</div>
+		  </div>
 	</div>
 </template>
 
@@ -36,7 +35,7 @@
 	export default {
 		data() {
 		  return {
-		  	total:1000, //默认数据总条数
+		  	total:0, //默认数据总条数
 			pageSize:10, //每页的数据条数
 			currentPage:1, //当前页
 			desases:[] //返回数据

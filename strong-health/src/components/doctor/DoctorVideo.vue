@@ -1,9 +1,8 @@
 <template>
 	<div class="doctorvideo">
-		<article class="banner banner1">
+		<!--<article class="banner banner1">
 			<h2>视频专区列表</h2>
-		</article>
-		
+		</article>-->
 		<div class="container clearfix vievone" id="vievtr">
 			<h2>视频专区<a href="javascript:history.go(-1)">返回上一页</a></h2>
 			<!--<router-link :to="{name:'doctorvideoDetails'}" > -->
@@ -14,6 +13,16 @@
 					<h4>{{v.title}}</h4>
 				</div>
 		</div>
+		<div class="block">
+		    <span class="demonstration"></span>
+		    <el-pagination
+		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
+		      :page-size="100"
+		      layout="total, prev, pager, next, jumper"
+		      :total="total">
+		    </el-pagination>
+		  </div>
 	</div>
 </template>
 
@@ -21,10 +30,17 @@
 	export default {
 		data(){
 			return{
-				videos:[]
+				videos:[],
+				total:400,     //总数量
+				currentPage:1, //当前页
+				pageSize:6,   //每页条数
 			}
 		},
 		methods:{
+
+			handleCurrentChange(val){
+				alert("跳转当前页")
+			},
 			gitVideo(){
 				this.$axios.get("/strong_portal_site/video/selectVideoList")
 				.then((res)=>{
@@ -47,6 +63,10 @@
 </script>
 
 <style scoped="">
+	.block{
+		margin-bottom: 30px;
+		text-align: center;
+	}
 	.banner h2 {
 		text-align: center;
 		line-height: 100px;
@@ -72,7 +92,7 @@
 	}
 	
 	.vievone {
-		margin-bottom: 55px;
+		margin-top: 60px;
 	}
 	
 	.vievone h2 {

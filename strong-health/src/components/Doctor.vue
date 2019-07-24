@@ -64,7 +64,7 @@
 			getPicText(){
 				//图文专区	
 				this.$axios.post("/strong_portal_site/article/selectArtileByType",{
-					dictId :201907020929450000,
+					dictId :201907020931160000,
 					status :1
 				})
 				.then((res)=>{

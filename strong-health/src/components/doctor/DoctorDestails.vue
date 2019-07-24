@@ -8,6 +8,10 @@
 			<div class="content-article" v-html="text.content">
 				
 			</div>
+			<p class="reprintAddress" style="font-size: 16px;">来源地址:
+				<a style="font-size:16px;" :href="text.reprintAddress"
+				 target="_blank"> {{text.reprintAddress}}</a>
+			</p>
 		</div>
 
 		</div>
@@ -31,6 +35,7 @@
 				.then((res)=>{
 					var res = res.data.resultObj.articlList;
 					this.text = res;
+					console.log(res)
 				})
 			}
 		},

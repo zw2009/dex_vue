@@ -29,9 +29,9 @@
 					</h2>
 					<div class="flashListWrap">
 						<ul class="scrollbar scroll">
-							<li class="blue" v-for="n in linenews">
+							<li class="blue" v-for="n in linenews" @click="todetails(n.articleId)">
 								<p>{{n.title}}</p>
-								<!--<span>1小时前</span>-->
+								<span>{{GetDateStr(n.update_time)}}</span>
 							</li>
 						</ul>
 					</div>
@@ -91,6 +91,9 @@
 </script>
 
 <style scoped="">
+.scroll li{
+	cursor: pointer;
+}
 .container{
 	margin-top:60px;
 }

@@ -23,29 +23,14 @@
 				<router-link :to="{name:'findfulltime'}">找工作</router-link>/
 				<router-link :to="{name:'findparttime'}">找兼职</router-link>
 				<p class="timejob">
-					<button type="button" class="btn btn-link"><router-link :to="{name:'fulltime'}">全职简历</router-link></button>
-					<router-link :to="{name:'fulltimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link> /
-					<button type="button" class="btn btn-link"><router-link :to="{name:'parttime'}">兼职简历</router-link></button>
-					<router-link :to="{name:'parttimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link> 
+					<button type="button" class="btn btn-link"><router-link :to="{name:'fulltime'}">全职简历创建</router-link></button>
+					<!--<router-link :to="{name:'fulltimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link>--> /
+					<button type="button" class="btn btn-link"><router-link :to="{name:'parttime'}">兼职简历创建</router-link></button>
+					<!--<router-link :to="{name:'parttimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link> -->
 				</p>
 			</div>
 			<!--职位展示-->
 			<router-view></router-view>
-		</div>
-
-		<!--模态框弹窗-->
-		<div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modede">
-			<div class="modal-dialog modal-sm" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel">提示</h4>
-					</div>
-					<div class="modal-body">
-						投递成功
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -67,7 +52,7 @@ thead th,tbody tr th,tbody tr td{
 	border-radius: 5px;
 }	
 .job-change {
-	padding:22px 0 14px 0;
+	padding-top:22px;
 }
 
 .job-change a {
