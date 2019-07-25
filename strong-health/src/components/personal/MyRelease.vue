@@ -1,77 +1,152 @@
 <template>
 	<div class="my-release">
 		<!--我的发布-->
-				<div class="exrt" id="myRelease">
-					<h4><span>我的发布</span></h4>
-					<!--发布第一条-->
-					<div class="tit clearfix my-release">
-						<h5>信息编号：1895354565654554</h5>
-						<!--发布左边-->
-						<div class="leftit">
-							<img src="img/health/zhanwei.png" />
-							<div class="menu">
-								<p><strong>湖南思众医疗管理有限公司</strong></p>
-								<p>中医医生</p>
-								<p>2019-05-26 14:25</p>
-								<p>长沙-岳麓</p>
-							</div>
-						</div>
-						<!--发布右边-->
-						<div class="rigtit leftit">
-							<div class="showpop">
-								<p class="text-success">全职</p>
-								<p><a>显示中</a></p>
-								<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
-							</div>
-							
-							<div class="delete">
-								<p>
-									<a class="revise" href="javascript:void(0)">修改</a>
-								</p>
-								<p>
-									<a class="rdelect" href="javascript:void(0)">彻底删除</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<!--发布第一条-->
-					<div class="tit clearfix my-release">
-						<h5>信息编号：1895354565654554</h5>
-						<!--发布左边-->
-						<div class="leftit">
-							<img src="img/health/zhanwei.png" />
-							<div class="menu">
-								<p><strong>湖南思众医疗管理有限公司</strong></p>
-								<p>中医医生</p>
-								<p>2019-05-26 14:25</p>
-								<p>长沙-岳麓</p>
-							</div>
-						</div>
-						<!--发布右边-->
-						<div class="rigtit leftit">
-							<div class="showpop">
-								<p class="text-success">兼职</p>
-								<p><a>未显示</a></p>
-								<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
-							</div>
-							<div class="delete">
-								<p>
-									<a class="revise" href="javascript:void(0)">修改</a>
-								</p>
-								<p>
-									<a class="rdelect" href="javascript:void(0)">彻底删除</a>
-								</p>
-							</div>
-						</div>
+		<div class="exrt" id="myRelease">
+			<h4><span>我的发布</span></h4>
+			<!--发布第一条-->
+			<div class="tit clearfix my-release" v-for="m in myrels">
+				<h5>信息编号：{{m.recruitId}}</h5>
+				<!--发布左边-->
+				<div class="leftit">
+					<img src="img/health/zhanwei.png" />
+					<div class="menu">
+						<p><strong>{{m.companyName}}</strong></p>
+						<p>{{m.positionName}}</p>
+						<p>{{GetDateStr(m.updateTime)}}</p>
+						<p>{{m.city}}-{{m.address}}</p>
 					</div>
 				</div>
+				<!--发布右边-->
+				<div class="rigtit leftit">
+					<div class="showpop">
+						<p class="text-success">{{changType(m.recruitType)}}</p>
+						<p><a style="cursor: pointer;">{{changestatus(m.status)}}</a></p>
+						<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
+					</div>
+					
+					<div class="delete">
+						<p>
+							<a class="revise" href="javascript:void(0)" @click="gopubrec(m.recruitId)">修改</a>
+						</p>
+						<p>
+							<a class="rdelect" href="javascript:void(0)" @click="delectid(m.recruitId)">彻底删除</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="block">
+			    <span class="demonstration"></span>
+			    <el-pagination
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-size="pageSize"
+			      layout="total, prev, pager, next, jumper"
+			      :total="total">
+			    </el-pagination>
+			  </div>
+		</div>
 	</div>
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				myrels:[],
+				currentPage:1,
+				pageSize:5,
+				total:0,
+				userid:JSON.parse(localStorage.getItem("user")).userId //用户id
+			}
+		},
+		methods:{
+			changType(type){
+				if(type == "1"){
+					return "全职";
+				}else if(type == "2"){
+					return "兼职";
+				}
+			},
+			changestatus(status){
+				if(status == "1"){
+					return "显示中";
+				}
+				return "未显示";
+			},
+			gopubrec(id){//跳转到修改页面
+				this.$router.push({
+					name:"publishrecruit",
+					query:{
+						id:id
+					}
+				})
+			},
+			delectid(id){//删除当前获取到的id的信息
+				this.$confirm('是否永久删除该信息, 是否继续?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+		        	this.$axios.post("/strong_portal_site/recruitInfo/deleteRecruitInfoList",{
+		        		recruitId: id
+		        	})
+		        	.then((res)=>{
+		        		 this.getpage();
+		        		this.$message({
+				            type: 'success',
+				            message: '删除成功!'
+				          });
+		        	})
+		        }).catch(() => {
+		          this.$message({
+		            type: 'info',
+		            message: '已取消删除'
+		          });          
+		        });
+			},
+			handleCurrentChange(val){
+				this.getpage(val);
+			},
+			getpage(val){
+				this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
+					crateUser: this.userid, 
+					status: "1",
+					pageNo:val,
+					pageSize :this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.myrels = res.data.resultObj.recruitList
+						console.log(res.data.resultObj.recruitList)
+					}
+				})
+			}
+		},
+		created(){
+			this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
+				crateUser: this.userid, 
+				status: "1",
+				pageNo:1 ,
+				pageSize :5
+			})
+			.then((res)=>{
+				if(res.data.resultCode == "1"){
+					this.total = res.data.resultObj.totalSize;
+					this.myrels = res.data.resultObj.recruitList;
+					console.log(res.data.resultObj.recruitList)
+				}
+				
+			})
+		}
+	}
 </script>
 
 <style scoped="scoped">
+.block{
+	text-align: center;
+	margin: 20px 0;
+}
 /*右边*/
 
 .exrt {

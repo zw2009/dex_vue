@@ -1,12 +1,16 @@
 <template>
 	<div class="find-part">
+		<div class="search" style="display: flex;">
+				<input type="text" class="form-control" placeholder="请输入搜索职位" id="sea" v-model="seach" @change="seachfulls">
+				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" @click="seachfulls">搜索</button>
+			</div>
 		<div class="bs-example" data-example-id="hoverable-table">
 				 <el-table
 				   :data="fulls.slice((currentPage-1)*pageSize, currentPage*pageSize)"
 				   stripe
 				    style="width: 100%">
 		                <el-table-column
-		                  prop="positionLabel"
+		                  prop="positionName"
 		                  label="职位名"
 		                  width="180">
 		                </el-table-column>
@@ -60,7 +64,8 @@
 				total:0,//默认数据总条数
 				pageSize:10,//每页的数据条数
 				currentPage:1,//默认开始页
-				fulls:[]
+				fulls:[],
+				seach:""
 			}
 		},
 		methods:{
@@ -88,14 +93,14 @@
 				.then((res)=>{
 					this.fulls = res.data.resultObj.recruitList;
 				})
-			}
-		},
-		created(){
-			this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
+			},
+			seachfulls(){
+				this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
 					recruitType : 2,  //兼职简历的类型
 					status : 1, //状态
 					pageNo:this.currentPage ,
-					pageSize : this.pageSize
+					pageSize : this.pageSize,
+					positionName:this.seach
 				})
 				.then((res)=>{
 					console.log(res)
@@ -105,13 +110,17 @@
 						console.log(this.fulls)
 					}
 				})
+			}
+		},
+		created(){
+			this.seachfulls();
 		}
 	}
 </script>
 
 <style scoped="">
 .find-part {
-    height: 556px;
+    height:624px;
 }
 >>>.el-table td, .el-table th{
 	padding: 8px 0;

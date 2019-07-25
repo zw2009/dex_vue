@@ -23,6 +23,7 @@ import fulltime from '@/components/doctorcare/FullTime'
 import parttime from '@/components/doctorcare/PartTime'
 import fulltimelook from '@/components/doctorcare/FullTimeLook'
 import parttimelook from '@/components/doctorcare/PartTimeLook'
+import searchresume from '@/components/doctorcare/SearchResume'
 	//医护人才二级路由
 	import findfulltime from '@/components/doctorcare/FindFullTime'
 	import findparttime from '@/components/doctorcare/FindPartTime'
@@ -32,6 +33,7 @@ import myrelease from '@/components/personal/MyRelease'
 import invitationinterview from '@/components/personal/InvitationInterview'
 import myapplication from '@/components/personal/MyApplication'
 import reaumelist from '@/components/personal/ResumeList'  
+
 import visitingjobsearch from '@/components/personal/VisitingJobSearch'  //来访求职者列表页visitingJobSearch
 //关于我们
 import about from '@/components/about/About'
@@ -83,6 +85,7 @@ let routes = [
 		{path: '/fulltime',component: fulltime,name:"fulltime",meta:{ title:"全职简历"}},
 		{path: '/fulltimelook',component: fulltimelook,name:"fulltimelook",meta:{ title:"全职简历预览"}},
 		{path: '/parttime',component: parttime,name:"parttime",meta:{ title:"兼职简历"}},
+		{path: '/searchresume',component: searchresume,name:"searchresume",meta:{ title:"搜简历"}},
 		{path: '/parttimelook',component: parttimelook,name:"parttimelook",meta:{ title:"兼职简历预览"}},
 		{path:'/szforum',component:szforum,name:'szforum',meta:{title:'思众论坛'}},
 		

@@ -13,15 +13,12 @@
 				<router-link :to="{name:'publishrecruit'}">发布招聘</router-link>
 				<!--<a href="jianzhifabu.html" type="button" class="btn btn-success">发布兼职招聘</a>-->
 			</div>
-			<!--搜索职位-->
-			<div class="search" style="display: flex;">
-				<input type="text" class="form-control" placeholder="请输入搜索内容" id="sea">
-				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;">搜索</button>
-			</div>
+			
 			<!--职位切换-->
 			<div class="job-change clearfix">
 				<router-link :to="{name:'findfulltime'}">找工作</router-link>/
-				<router-link :to="{name:'findparttime'}">找兼职</router-link>
+				<router-link :to="{name:'findparttime'}">找兼职</router-link>/
+				<router-link to="searchresume" tag="a" target="_blank">搜简历</router-link>
 				<p class="timejob">
 					<button type="button" class="btn btn-link"><router-link :to="{name:'fulltime'}">全职简历创建</router-link></button>
 					<!--<router-link :to="{name:'fulltimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link>--> /
@@ -51,9 +48,6 @@ thead th,tbody tr th,tbody tr td{
 	color: #fff;
 	border-radius: 5px;
 }	
-.job-change {
-	padding-top:22px;
-}
 
 .job-change a {
 	font-size: 16px;

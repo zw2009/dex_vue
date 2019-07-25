@@ -1,5 +1,10 @@
 <template>
 	<div class="find-full">
+		<!--搜索职位-->
+			<div class="search" style="display: flex;">
+				<input type="text" class="form-control" v-model="seach" placeholder="请输入搜索职位" id="sea" @change="seschfulls">
+				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" @click="seschfulls">搜索</button>
+			</div>
 		<div class="bs-example" data-example-id="hoverable-table">
 				 <el-table
 				   :data="fulls"
@@ -7,7 +12,7 @@
 				   
 				    style="width: 100%">
 		                <el-table-column
-		                  prop="positionLabel"
+		                  prop="positionName"
 		                  label="职位名"
 		                  width="180">
 		                </el-table-column>
@@ -62,7 +67,8 @@
 				total:0,//默认数据总条数
 				pageSize:10,//每页的数据条数
 				currentPage:1,//默认开始页
-				fulls:[]
+				fulls:[],
+				seach:''
 			}
 		},
 		methods:{
@@ -90,30 +96,33 @@
 				.then((res)=>{
 					this.fulls = res.data.resultObj.recruitList;
 				})
-			}
-		},
-		created(){
-			this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
+			},
+			seschfulls(){
+				this.$axios.post('/strong_portal_site/recruitInfo/recruitInfoList',{
 					recruitType : 1,  //全职简历的类型
 					status : 1, //状态
 					pageNo:this.currentPage ,
-					pageSize : this.pageSize
+					pageSize : this.pageSize,
+					positionName:this.seach
 				})
 				.then((res)=>{
 					console.log(res)
 					if(res.data.resultCode == "1"){
 						this.total = res.data.resultObj.totalSize;
 						this.fulls = res.data.resultObj.recruitList;
-						console.log(this.fulls)
 					}
 				})
+			}
+		},
+		created(){
+			this.seschfulls();
 		}
 	}
 </script>
 
 <style scoped="">
 .find-full {
-    height: 556px;
+    height:624px;
 }
 >>>.el-table td, .el-table th{
 	padding: 8px 0;

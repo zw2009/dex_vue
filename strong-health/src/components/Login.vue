@@ -57,18 +57,17 @@
 						loginName:phone,
 						password:pwd
 					}).then((res)=>{
-						console.log(res)
 						if(res.data.resultCode == "1"){
 							this.$message({
 					          message: '登陆成功',
 					          type: 'success'
         					});
         				//保存用户类型企业用户还是个人用户
-        				let obj = {type:1};
-        				localStorage.setItem("type",JSON.stringify(obj));
+        				let obj = res.data.resultObj.sysuser;
+        				localStorage.setItem("user",JSON.stringify(obj));
         				
         				//把当前用户登录的返回信息放到sesstionStorage
-        				sessionStorage.setItem("LoginUser",JSON.stringify(res.data.resultObj.token));
+        				sessionStorage.setItem("LoginUser",res.data.resultObj.sysuser.token);
         				//把用户当前的信息放到vuex里面 
         				this.$store.commit('initUser',res.data.resultObj.token) 
 						this.$router.push({

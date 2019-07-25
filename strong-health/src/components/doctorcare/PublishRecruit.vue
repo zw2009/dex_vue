@@ -1,22 +1,25 @@
 <template>
 	<div class="publish-recruit">
 		<div class="container">
-			<h2>您正在发布招聘中...</h2>
+			<h2>{{title}}</h2>
 			<div class="from-container">
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-form-item label="公司名称" prop="compname">
-						<el-input v-model="ruleForm.compname" placeholder="请输入公司名称"></el-input>
+						<el-input  v-model="ruleForm.compname" placeholder="请输入公司名称"></el-input>
 					</el-form-item>
 					<el-form-item label="职位类别" prop="region">
 						<el-select v-model="ruleForm.region" placeholder="请选择职位类别" required>
-							<el-option :label="p.label" :value="p.dictId" v-for="p in positionlist" :key="p.dictId"></el-option>
+							<el-option label="医生" value="医生"></el-option>
+							<el-option label="护士" value="护士"></el-option>
+							<el-option label="药剂师" value="药剂师"></el-option>
+							<el-option label="药房" value="药房"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="招聘人数" prop="num" required>
 						<el-input v-model="ruleForm.num" placeholder="请输入招聘人数"></el-input>
 					</el-form-item>
 					<el-form-item label="全职/兼职" prop="pullprat" required>
-						<el-select v-model="ruleForm.pullprat" @change="pulpra" placeholder="请选择就职类型">
+						<el-select v-model="ruleForm.pullprat" :value="ruleForm.pullprat" @change="pulpra" placeholder="请选择就职类型">
 							<el-option label="全职" value="1"></el-option>
 							<el-option label="兼职" value="2"></el-option>
 						</el-select>
@@ -107,6 +110,7 @@
 	export default {
 		data() {
 			return {
+				title:"您正在发布招聘中...",
 				types: Types,
 				quan:false,
 				jian:false,
@@ -120,33 +124,35 @@
 					children: [{
 						value: '长沙市',
 						label: '长沙市',
-//						children: [{
-//							value: '芙蓉区',
-//							label: '芙蓉区'
-//						}, {
-//							value: '天心区',
-//							label: '天心区'
-//						}, {
-//							value: '岳麓区',
-//							label: '岳麓区'
-//						}, {
-//							value: '开福区',
-//							label: '开福区'
-//						}, {
-//							value: '雨花区',
-//							label: '雨花区'
-//						}, {
-//							value: '长沙县',
-//							label: '长沙县'
-//						}, {
-//							value: '宁乡县',
-//							label: '宁乡县'
-//						}, {
-//							value: '浏阳市',
-//							label: '浏阳市'
-//						}]
+						children: [{
+							value: '芙蓉区',
+							label: '芙蓉区'
+						}, {
+							value: '天心区',
+							label: '天心区'
+						}, {
+							value: '岳麓区',
+							label: '岳麓区'
+						}, {
+							value: '开福区',
+							label: '开福区'
+						}, {
+							value: '雨花区',
+							label: '雨花区'
+						}, {
+							value: '长沙县',
+							label: '长沙县'
+						}, {
+							value: '宁乡县',
+							label: '宁乡县'
+						}, {
+							value: '浏阳市',
+							label: '浏阳市'
+						}]
 					}]
 				}],
+				getid:this.$route.query.id,
+				user:{},
 				ruleForm: {
 					compname: '',  //公司名称
 					region: '',    //职位类别
@@ -238,14 +244,49 @@
 			};
 		},
 		created(){
+			this.changdata();//获取id修改数据
+			this.user = JSON.parse(localStorage.getItem("user"));
 			this.getData();
 		},
 		methods: {
+			changdata(){
+				if(this.getid){
+				this.title = "您正在编辑招聘信息中...";
+				this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfoById",{
+					recruitId :this.getid
+				}).then((res)=>{
+					if(res.data.resultCode){
+						let data = res.data.resultObj.recruitInfo;
+						this.ruleForm.compname = data.companyName; //公司名称
+						this.ruleForm.region = data.positionName;    //招聘岗位
+						this.ruleForm.num = data.recruitNum;    //招聘人数
+						this.ruleForm.pullprat = data.recruitType;//招聘类型全职、兼职
+						this.ruleForm.through = data.experience;  //工作经验
+						this.ruleForm.salary = data.salary;      //薪资待遇
+						this.ruleForm.educat = data.education ;  //学历要求
+						//this.ruleForm.area = data.province;    //工作地点 省
+						//this.ruleForm.area[1] = data.city;    //工作地点 市
+						this.ruleForm.address = data.address;    //工作地点 区
+						this.ruleForm.name = data.contactsName;   //联系人
+//						this.user.userId = data.crateUser;       //发布人id从系统取
+						this.ruleForm.phone = data.phone;        //联系电话
+						this.ruleForm.content = data.workContent; //工作内容
+						this.ruleForm.ask = data.requirements;    //职位要求
+						this.ruleForm.time = data.workTime;       //工作时间
+						this.ruleForm.delivery = Boolean(data.status);        //是否发布   
+                     	//this.ruleForm.type = data.welfare;			//岗位福利
+                        //this.ruleForm.type1 = data.timeRequirements;//兼职时间
+	                    this.pulpra();//判断全职兼职显示
+					}
+					
+				})
+			}
+			},
+			//获取id修改发布招聘的信息
 			getData(){
 				this.$axios.post("/strong_portal_site/dict/dictlist")
 				.then((res)=>{
 					if(res.data.resultCode == "1"){
-						this.positionlist = res.data.resultObj.positionlist; //职位
 						this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
 						this.educationlist = res.data.resultObj.educationlist;  //学历要求
 						this.Salarylist = res.data.resultObj.Salarylist; //薪资待遇
@@ -253,27 +294,28 @@
 				})
 			},
 			submitForm(formName) {
-				
+				console.log(this.ruleForm.area)
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						console.log(this.ruleForm);
 						this.$axios.post("/strong_portal_site/recruitInfo/saveRecruitInfoList",{
+							recruitId :this.getid,
 							companyName:this.ruleForm.compname, //公司名称
-							position:this.ruleForm.region,    //招聘岗位
+							positionName:this.ruleForm.region,    //招聘岗位
 							recruitNum:this.ruleForm.num,     //招聘人数
 							recruitType:this.ruleForm.pullprat,//招聘类型全职、兼职
 							experience:this.ruleForm.through,  //工作经验
 							salary:this.ruleForm.salary,       //薪资待遇
 							province:this.ruleForm.area[0],    //工作地点 省
    							city:this.ruleForm.area[1],    //工作地点 市
-   							address:this.ruleForm.address,    //工作地点 区
+   							area:this.ruleForm.area[2], //区
+   							address:this.ruleForm.address,    //详细地址
 							contactsName:this.ruleForm.name,   //联系人
-							crateUser:this.ruleForm.name,		//发布人
+							crateUser:this.user.userId,        //发布人id从系统取
 							phone:this.ruleForm.phone,         //联系电话
 							workContent:this.ruleForm.content, //工作内容
 							requirements:this.ruleForm.ask,    //职位要求
 							workTime:this.ruleForm.time,        //工作时间
-							sffb:this.ruleForm.delivery,        //是否发布   
+							status:Number(this.ruleForm.delivery),        //是否发布   1/0
                             welfare:this.ruleForm.type.join(''),			//岗位福利
                             timeRequirements:this.ruleForm.type1.join(','),//兼职时间
                             education:this.ruleForm.educat            //学历要求
@@ -318,7 +360,7 @@
     margin-bottom: 5px;
 }
 
-#chekgroud label:nth-child(8) {
+#chekgroud label:nth-child(6),#chekgroud label:nth-child(11) {
 	border-left: 1px solid #DCDFE6 !important;
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
