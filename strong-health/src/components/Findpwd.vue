@@ -120,7 +120,7 @@
 				}
 			},
 			send(){
-				this.time = 10;
+				this.time = 120;
 				var timer = setInterval(()=>{
 					this.time -- ;
 					if(this.time < 0){

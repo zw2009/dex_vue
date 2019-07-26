@@ -18,6 +18,9 @@
 						  <el-radio v-model="ruleForm.sex" label="男">男</el-radio>
   						  <el-radio v-model="ruleForm.sex" label="女">女</el-radio>
 					</el-form-item>
+					<el-form-item label="是否公开">
+					    <el-switch v-model="ruleForm.status"></el-switch>
+					  </el-form-item>
 					<el-form-item label="电话号码" prop="phone" required>
 						<el-input v-model="ruleForm.phone" placeholder="请输入电话"></el-input>
 					</el-form-item>
@@ -25,25 +28,19 @@
 						<el-date-picker v-model="ruleForm.birth" type="date" placeholder="选择日期">
 						</el-date-picker>
 					</el-form-item>
-					<el-form-item label="工作年限" prop="through" required>
+					<el-form-item label="工作经验" prop="through" required>
 						<el-select v-model="ruleForm.through" placeholder="请选择工作经验" required>
-							<el-option label="无经验" value="无经验"></el-option>
-							<el-option label="应届生" value="应届生"></el-option>
-							<el-option label="一年以下" value="一年以下"></el-option>
-							<el-option label="1-3年" value="1-3年"></el-option>
-							<el-option label="3-5年" value="3-5年"></el-option>
-							<el-option label="5-10年" value="5-10年"></el-option>
-							<el-option label="10年以上" value="10年以上"></el-option>
+							<el-option :label="e.label" :value="e.dictId" v-for="e in experiencelist" :key="e.dictId"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="学历" prop="educat" required>
+						<el-select v-model="ruleForm.educat" placeholder="请选择您的学历" required>
+							<el-option :label="e.label" :value="e.dictId" v-for="e in educationlist" :key="e.dictId"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="薪资待遇" prop="salary" required>
 						<el-select v-model="ruleForm.salary" placeholder="请选择薪资待遇" required>
-							<el-option label="1000-2000元" value="1000-2000元"></el-option>
-							<el-option label="2000-3000元" value="2000-3000元"></el-option>
-							<el-option label="3000-5000元" value="3000-5000元"></el-option>
-							<el-option label="5000-8000元" value="5000-8000元"></el-option>
-							<el-option label="8000-12000元" value="8000-12000元"></el-option>
-							<el-option label="12000以上" value="12000以上"></el-option>
+							<el-option :label="s.label" :value="s.dictId" v-for="s in Salarylist" :key="s.dictId"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="职位福利" prop="type" v-if="quan">
@@ -58,13 +55,18 @@
 							<el-checkbox label="房补" name="type"></el-checkbox>
 						</el-checkbox-group>
 					</el-form-item>
-					<el-form-item label="工作区域" prop="area" required>
-						<el-cascader :options="options" v-model="ruleForm.area"></el-cascader>
-						<el-input v-model="ruleForm.address" placeholder="请输入详细地址" style="width: 71%;"></el-input>
+					<el-form-item label="求职区域" prop="area">
+						<div  style="display: flex;">
+							<span v-for="v in ruleForm.area" class="spanadd textover">
+							{{v}}  <i class="el-icon-delete" @click="deleadd"></i>
+						</span><el-input v-model="ruleForm.address" placeholder="请输入想工作的区域" @change="changeaddress(ruleForm.area)"></el-input>
+						</div>
 					</el-form-item>
-
 					<el-form-item label="工作经历" prop="desc">
 						<el-input type="textarea" v-model="ruleForm.content"></el-input>
+					</el-form-item>
+					<el-form-item label="自我介绍">
+						<el-input type="textarea" v-model="ruleForm.introduce"></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" @click="submitForm('ruleForm')">编辑完成</el-button>
@@ -84,6 +86,10 @@
 			return {
 				quan: false,
 				jian: false,
+				experiencelist:[],//工作经验
+				educationlist:[],//学历
+				Salarylist:[],  //薪资
+				userid:JSON.parse(localStorage.getItem("user")).userId,
 				options: [{
 					value: '湖南省',
 					label: '湖南省',
@@ -118,22 +124,30 @@
 					}]
 				}],
 				ruleForm: {
-					compname: '',
-					region: '',
-					name: '',
-					sex:'',
-					phone: '',
-					birth: '',
-					through: '',
-					salary: '',
-					area: [],
-					address: '',
-					content: '',
+					compname: '',  //简历名称
+					region: '',  //职位类别
+					name: '',    //姓名
+					sex:'',       //性别
+					phone: '',     //电话
+					birth: '',     //出生年月
+					through: '',   //工作经验
+					salary: '',		//薪资要求
+					area: [],       //工作区域
+					address: '',    //工作地点输入
+					content: '',    //工作经历
+					introduce:'',	//自我介绍
+					status:true,		//是否公开
+					educat:''     //学历
 				},
 				rules: {
 					compname: [{
 						required: true,
 						message: '请输入简历名称',
+						trigger: 'blur'
+					}],
+					name: [{
+						required: true,
+						message: '请输入名字',
 						trigger: 'blur'
 					}],
 					region: [{
@@ -161,16 +175,21 @@
 						message: '请选择薪资待遇',
 						trigger: 'change'
 					}],
-					area: [{
+					educat: [{
 						required: true,
-						message: '请选择工作区域',
+						message: '请选择您的学历',
 						trigger: 'change'
 					}],
-					address: [{
-						required: true,
-						message: '请输入详细地址',
-						trigger: 'blur'
-					}],
+//					area: [{
+//						required: true,
+//						message: '请选择工作区域',
+//						trigger: 'change'
+//					}],
+//					address: [{
+//						required: true,
+//						message: '请输入详细地址',
+//						trigger: 'blur'
+//					}],
 					name: [{
 						required: true,
 						message: '请输入姓名',
@@ -189,13 +208,65 @@
 				}
 			};
 		},
+		created(){
+			this.getData();//获取下拉列表数据
+		},
 		methods: {
+			deleadd(e){//添加多个工作区域时删除功能
+				this.ruleForm.area.splice(e,1);
+			},
+			changeaddress(){  //添加多个区域功能
+				if(this.ruleForm.address !=''){
+					this.ruleForm.area.push(this.ruleForm.address)
+				}
+			},
+			//获取下拉的信息
+			getData(){
+				this.$axios.post("/strong_portal_site/dict/dictlist")
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
+						this.educationlist = res.data.resultObj.educationlist;  //学历要求
+						this.Salarylist = res.data.resultObj.Salarylist; //薪资待遇
+					}
+				})
+			},
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						console.log(this.ruleForm);
+						//提交数据到后台
+						this.$axios.post("/strong_portal_site/personalResume/savepersonalResume",{
+							createUser:this.userid,    			//用户id
+							resumeName:this.ruleForm.compname,	//简历名称
+							positionName:this.ruleForm.region,	//应聘岗位
+							name:this.ruleForm.name,			//姓名
+							sex:this.ruleForm.sex,				//性别
+							phone:this.ruleForm.phone,			//电话
+							birthday:this.ruleForm.birth,		//出生年月
+							freeTime:"",						//空闲时间
+							experience:this.ruleForm.through,	//工作经验
+							Salary:this.ruleForm.salary,		//薪资待遇
+							workRegion:this.ruleForm.area.join("、"),			//工作区域
+							workExperience:this.ruleForm.content,	//工作经历
+							introduce:	this.ruleForm.introduce,	//自我介绍
+							resumelType:"2"	,							//简历类型（1兼职，2全职）
+							status:	Number(this.ruleForm.status),		//是否公开（1公开 0不公开）
+							education:this.ruleForm.educat 				//学历要求
+						})
+						.then((res)=>{
+							if(res.data.resultCode == "1"){
+								this.$message({
+						          message: res.data.resultMessage,
+						          type: 'success'
+						        });
+						        this.$refs[formName].resetFields();
+							}
+						})
 					} else {
-						console.log('error submit!!');
+						this.$message({
+				          message: '保存失败，数据错误',
+				          type: 'warning'
+				        });
 						return false;
 					}
 				});
@@ -221,11 +292,25 @@
 </script>
 
 <style scoped="">
+.spanadd{
+	background: #eee;
+	margin: 2px;
+	border-radius: 5px;
+	position: relative;
+	padding-right:15px;
+	width: 70px;
+}
+.spanadd i{
+	position: absolute;
+	right:0;
+	top: 30%;
+	color: red;
+}
 .el-form-item__error{
 	padding-top: 0px;
 }
 .el-form-item {
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 #chekgroud label:nth-child(8) {
 	border-left: 1px solid #DCDFE6 !important;
@@ -246,7 +331,17 @@
 }
 .from-container {
 	padding-top: 9px;
-	width: 880px;
+	width: 740px;
 	margin: 0 auto;
+}
+>>>.el-form-item__error {
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 10px;
+    left: 659px;
+    width: 90px;
 }
 </style>

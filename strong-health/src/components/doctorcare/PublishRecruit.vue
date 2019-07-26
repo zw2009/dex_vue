@@ -282,7 +282,7 @@
 				})
 			}
 			},
-			//获取id修改发布招聘的信息
+			//获取下拉的信息
 			getData(){
 				this.$axios.post("/strong_portal_site/dict/dictlist")
 				.then((res)=>{
@@ -294,7 +294,6 @@
 				})
 			},
 			submitForm(formName) {
-				console.log(this.ruleForm.area)
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
 						this.$axios.post("/strong_portal_site/recruitInfo/saveRecruitInfoList",{

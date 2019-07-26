@@ -17,7 +17,7 @@
 		                 <el-table-column
 		                  prop="companyName"
 		                  label="公司名"
-		                  width="238">
+		                  width="width">
 		                </el-table-column>
 		                 <el-table-column
 		                  prop="address"
@@ -35,7 +35,7 @@
 		                  label="发布时间"
 		                  width="180">
 		                </el-table-column>
-		                <el-table-column
+		                <el-table-column v-if="application"
 		                  prop=""
 		                  label="职位申请"
 		                  width="180">
@@ -65,7 +65,11 @@
 				pageSize:10,//每页的数据条数
 				currentPage:1,//默认开始页
 				fulls:[],
-				seach:""
+				seach:"",
+				width:"300",
+				application:false,
+				user:JSON.parse(localStorage.getItem("user")).userTyp,
+				
 			}
 		},
 		methods:{
@@ -103,16 +107,21 @@
 					positionName:this.seach
 				})
 				.then((res)=>{
-					console.log(res)
 					if(res.data.resultCode == "1"){
 						this.total = res.data.resultObj.totalSize;
 						this.fulls = res.data.resultObj.recruitList;
-						console.log(this.fulls)
 					}
 				})
 			}
 		},
 		created(){
+			if(this.user == "2"){
+				this.application = false;
+				this.width = "300";
+			}else if(this.user == "3"){
+				this.application = true;
+				this.width = "238";
+			}
 			this.seachfulls();
 		}
 	}

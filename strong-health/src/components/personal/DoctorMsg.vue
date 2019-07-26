@@ -35,12 +35,28 @@
 			return {
 				flag:false,
 				meuns:[
-					{id:1,title:'我的发布',to:'myrelease'},
-					{id:2,title:'面试邀请',to:'invitationinterview'},
-					{id:3,title:'我的申请',to:'myapplication'},
-					{id:4,title:'简历列表',to:'reaumelist'},
+					{id:1,title:'个人资料',to:'personaldata'},
+					{id:2,title:'我的发布',to:'myrelease'},
+					{id:3,title:'面试邀请',to:'invitationinterview'},
+					{id:4,title:'我的申请',to:'myapplication'},
+					{id:5,title:'简历列表',to:'reaumelist'},
 				],
-				id:0
+				meuns2:[
+					{id:6,title:'面试邀请',to:'invitationinterview'},
+					{id:7,title:'我的申请',to:'myapplication'},
+					{id:8,title:'简历列表',to:'reaumelist'},
+				],
+				id:0,
+				user:JSON.parse(localStorage.getItem("user")).userTyp
+			}
+		},
+		created(){
+//			console.log(this.meuns.push({id:6,title:'面试邀请',to:'invitationinterview'},
+//					{id:7,title:'我的申请',to:'myapplication'}))
+			if(this.user == "2"){
+				this.meuns.splice(2,3);
+			}else if(this.user == "3"){
+				this.meuns.splice(1,1);
 			}
 		},
 		methods:{

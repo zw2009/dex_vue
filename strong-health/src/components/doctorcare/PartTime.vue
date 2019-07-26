@@ -18,6 +18,9 @@
 						  <el-radio v-model="ruleForm.sex" label="男">男</el-radio>
   						  <el-radio v-model="ruleForm.sex" label="女">女</el-radio>
 					</el-form-item>
+					<el-form-item label="是否公开">
+					    <el-switch v-model="ruleForm.status"></el-switch>
+					  </el-form-item>
 					<el-form-item label="电话号码" prop="phone" required>
 						<el-input v-model="ruleForm.phone" placeholder="请输入电话"></el-input>
 					</el-form-item>
@@ -27,37 +30,27 @@
 					</el-form-item>
 					<el-form-item label="空闲时间" prop="type1" required>
 						<el-checkbox-group v-model="ruleForm.type1" size="medium" id="chekgroud">
-							<el-checkbox-button v-for="t in types" :label="t" :key="t">{{t}}</el-checkbox-button>
+							<el-checkbox-button v-for="t in types" :label="t.id" :key="t.id">{{t.day}}</el-checkbox-button>
 						</el-checkbox-group>
 					</el-form-item>
 					<el-form-item label="工作经验" prop="through" required>
 						<el-select v-model="ruleForm.through" placeholder="请选择工作经验" required>
-							<el-option label="无经验" value="无经验"></el-option>
-							<el-option label="应届生" value="应届生"></el-option>
-							<el-option label="一年以下" value="一年以下"></el-option>
-							<el-option label="1-3年" value="1-3年"></el-option>
-							<el-option label="3-5年" value="3-5年"></el-option>
-							<el-option label="5-10年" value="5-10年"></el-option>
-							<el-option label="10年以上" value="10年以上"></el-option>
+							<el-option :label="e.label" :value="e.dictId" v-for="e in experiencelist" :key="e.dictId"></el-option>
 						</el-select>
 					</el-form-item>
-					
-					<el-form-item label="最高学历" prop="salary" required>
-						<el-select v-model="ruleForm.salary" placeholder="请选择您的学历" required>
-							<el-option label="高中以下" value="高中以下"></el-option>
-							<el-option label="高中" value="高中"></el-option>
-							<el-option label="中专/技校" value="中专/技校"></el-option>
-							<el-option label="大专" value="大专"></el-option>
-							<el-option label="本科" value="本科"></el-option>
-							<el-option label="硕士" value="硕士"></el-option>
-							<el-option label="博士" value="博士"></el-option>
+					<el-form-item label="学历" prop="educat" required>
+						<el-select v-model="ruleForm.educat" placeholder="请选择您的学历" required>
+							<el-option :label="e.label" :value="e.dictId" v-for="e in educationlist" :key="e.dictId"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="求职区域" prop="area" required>
-						<el-cascader :options="options" v-model="ruleForm.area"></el-cascader>
+					<el-form-item label="求职区域" prop="area">
+						<div  style="display: flex;">
+							<span v-for="v in ruleForm.area" class="spanadd textover">
+							{{v}}  <i class="el-icon-delete" @click="deleadd"></i>
+						</span><el-input v-model="ruleForm.address" placeholder="请输入想工作的区域" @change="changeaddress(ruleForm.area)"></el-input>
+						</div>
 					</el-form-item>
-
-					<el-form-item label="自我介绍" prop="desc">
+					<el-form-item label="自我介绍" >
 						<el-input type="textarea" v-model="ruleForm.content"></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -72,9 +65,21 @@
 </template>
 
 <script>
-const Types = ['星期一上午', '星期二上午', '星期三上午', '星期四上午', '星期五上午', '星期六上午', '星期日上午',
-	'星期一下午', '星期二下午', '星期三下午', '星期四下午', '星期五下午', '星期六下午', '星期日下午',
-];
+const Types = [ {id:1,day:'星期一上午'},
+					{id:2,day:'星期二上午'},
+					{id:3,day:'星期三上午'},
+					{id:4,day:'星期四上午'},
+					{id:5,day:'星期五上午'},
+					{id:6,day:'星期六上午'},
+					{id:7,day:'星期日上午'},
+					{id:8,day:'星期一下午'},
+					{id:9,day:'星期二下午'},
+					{id:10,day:'星期三下午'},
+					{id:11,day:'星期四下午'},
+					{id:12,day:'星期五下午'},
+					{id:13,day:'星期六下午'},
+					{id:14,day:'星期日下午'}
+			];
 export default {
 	data() {
 		return {
@@ -82,6 +87,9 @@ export default {
 			types: Types,
 			quan: false,
 			jian: false,
+			experiencelist:[],//工作经验
+			educationlist:[],//学历
+			userid:JSON.parse(localStorage.getItem("user")).userId,
 			options: [{
 				value: '湖南省',
 				label: '湖南省',
@@ -116,17 +124,19 @@ export default {
 				}]
 			}],
 			ruleForm: {
-				compname: '',
-				region: '',
-				name: '',
-				sex:'',
-				phone: '',
-				birth: '',
-				type1:[],
-				through: '',
-				salary: '',
-				area: [],
-				content: '',
+				compname: '',  //简历名称 
+				region: '',		//职位类别
+				name: '',		//姓名
+				sex:'',   		 //性别
+				phone: '',		 //电话
+				birth: '',		//出生年月
+				type1:[],      //空闲时间
+				through: '',	//工作经验
+				educat: '', 	//最高学历
+				area: [],		//工作区域数组
+				address:'',     //工作地点输入
+				content: '',	//自我介绍
+				status:true,	//是否公开
 			},
 			rules: {
 				compname: [{
@@ -164,11 +174,11 @@ export default {
 					message: '请选择您的学历',
 					trigger: 'change'
 				}],
-				area: [{
-					required: true,
-					message: '请选择您求职的区域',
-					trigger: 'change'
-				}],
+//				area: [{
+//					required: true,
+//					message: '请选择您求职的区域',
+//					trigger: 'change'
+//				}],
 				name: [{
 					required: true,
 					message: '请输入姓名',
@@ -187,16 +197,68 @@ export default {
 			}
 		};
 	},
+	created(){
+		this.getData();//获取下拉列表数据
+	},
 	methods: {
-		submitForm(formName) {
-			this.$refs[formName].validate((valid) => {
-				if(valid) {
-					console.log(this.ruleForm);
-				} else {
-					console.log('error submit!!');
-					return false;
+		deleadd(e){//添加多个工作区域时删除功能
+			this.ruleForm.area.splice(e,1);
+		},
+		changeaddress(){  //添加多个区域功能
+			if(this.ruleForm.address !=''){
+				this.ruleForm.area.push(this.ruleForm.address)
+			}
+		},
+		//获取下拉的信息
+		getData(){
+			this.$axios.post("/strong_portal_site/dict/dictlist")
+			.then((res)=>{
+				if(res.data.resultCode == "1"){
+					this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
+					this.educationlist = res.data.resultObj.educationlist;  //学历要求
 				}
-			});
+			})
+		},
+		submitForm(formName) {
+			
+			this.$refs[formName].validate((valid) => {
+					if(valid) {
+						//提交数据到后台
+						this.$axios.post("/strong_portal_site/personalResume/savepersonalResume",{
+							createUser:this.userid,    			//用户id
+							resumeName:this.ruleForm.compname,	//简历名称
+							positionName:this.ruleForm.region,	//应聘岗位
+							name:this.ruleForm.name,			//姓名
+							sex:this.ruleForm.sex,				//性别
+							phone:this.ruleForm.phone,			//电话
+							birthday:this.ruleForm.birth,		//出生年月
+							freeTime:this.ruleForm.type1.join('，'),		//空闲时间
+							experience:this.ruleForm.through,	//工作经验
+							Salary:"",							//薪资待遇
+							workRegion:this.ruleForm.area.join("、"),//工作区域
+							workExperience:"",	    			//工作经历
+							introduce:	this.ruleForm.content,	//自我介绍
+							resumelType:"1"	,							//简历类型（1兼职，2全职）
+							status:	Number(this.ruleForm.status),		//是否公开（1公开 0不公开）
+							education:this.ruleForm.educat 				//学历要求
+						})
+						.then((res)=>{
+							if(res.data.resultCode == "1"){
+								this.$message({
+						          message: res.data.resultMessage,
+						          type: 'success'
+						        });
+						        this.$refs[formName].resetFields();
+							}
+						})
+					} else {
+						this.$message({
+				          message: '保存失败，数据错误',
+				          type: 'warning'
+				        });
+						return false;
+					}
+				});
 		},
 		resetForm(formName) {
 			this.$refs[formName].resetFields();
@@ -219,6 +281,20 @@ export default {
 </script>
 
 <style scoped="">
+.spanadd{
+	background: #eee;
+	margin: 2px;
+	border-radius: 5px;
+	position: relative;
+	padding-right:15px;
+	width: 70px;
+}
+.spanadd i{
+	position: absolute;
+	right:0;
+	top: 30%;
+	color: red;
+}
 .el-form-item__error{
 	padding-top: 0 !important;
 }

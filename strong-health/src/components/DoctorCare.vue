@@ -3,7 +3,7 @@
 		<!--右边悬浮-->
 		<ul class="xianfu">
 			<li>
-				<router-link :to="{name:'doctormsg'}">个人中心 <i>1</i></router-link>
+				<router-link :to="{name:'doctormsg'}">个人中心</router-link>
 			</li>
 			</li>
 		</ul>
@@ -19,7 +19,7 @@
 				<router-link :to="{name:'findfulltime'}">找工作</router-link>/
 				<router-link :to="{name:'findparttime'}">找兼职</router-link>/
 				<router-link to="searchresume" tag="a" target="_blank">搜简历</router-link>
-				<p class="timejob">
+				<p class="timejob" v-if="bioshow">
 					<button type="button" class="btn btn-link"><router-link :to="{name:'fulltime'}">全职简历创建</router-link></button>
 					<!--<router-link :to="{name:'fulltimelook'}"><span class="glyphicon glyphicon-search" ></span>预览</router-link>--> /
 					<button type="button" class="btn btn-link"><router-link :to="{name:'parttime'}">兼职简历创建</router-link></button>
@@ -35,6 +35,28 @@
 <script>
 	export default { 
 		name:"doctorcare",
+		data(){
+			return{
+				bioshow:false,
+				user:JSON.parse(localStorage.getItem("user")).userTyp,
+				loginuser:sessionStorage.getItem("LoginUser")
+			}
+		},
+		created(){
+			if(this.user == "2"){
+				this.bioshow = false;
+			}else if(this.user == "3"){
+				this.bioshow = true;
+			}
+			console.log(this.loginuser)
+			if(this.loginuser == "" || this.loginuser == null){
+				this.$router.push("/login");
+				this.$message({
+		          message: '您没有登录，请登录！',
+		          type: 'warning'
+		        });
+			}
+		}
 	}
 </script>
 
@@ -52,7 +74,9 @@ thead th,tbody tr th,tbody tr td{
 .job-change a {
 	font-size: 16px;
 }
-
+.job-change.clearfix {
+    margin-bottom: 16px;
+}
 .job-change p {
 	float: right;
 }

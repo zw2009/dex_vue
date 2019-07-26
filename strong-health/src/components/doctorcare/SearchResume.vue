@@ -11,15 +11,14 @@
 		
 		<div class="reslist">
 			<ul>
-				<li v-for="r in resumes">
+				<li v-for="r in resumes" >
 					<!--左边-->
-					
 					<div class="fl">
 						<img ref="img" :src="r.imgUrl"/>
 						<dl>
-							<dt>曾先生<em>男</em><em>24岁</em><em>1-3年</em><em>大专</em></dt>
-							<dd>期望职位：{{r.position}}</dd>
-							<dd>期望地点：长沙</dd>
+							<dt>曾先生<em>{{r.sex}}</em><em>出生年份：{{GetDateStr(r.birthday)}}</em><em>{{r.experienceLabel}}</em><em>{{r.educationLabel}}</em></dt>
+							<dd>期望职位：<span>{{r.position}}</span></dd>
+							<dd>期望地点：{{r.workRegion}}</dd>
 						</dl>
 					</div>
 					<!--右边-->
@@ -32,6 +31,16 @@
 					</div>
 				</li>
 			</ul>
+			<div class="block">
+			    <span class="demonstration"></span>
+			    <el-pagination
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-size="pageSize"
+			      layout="total, prev, pager, next, jumper"
+			      :total="total">
+			    </el-pagination>
+			  </div>
 		</div>
 	</div>
 </template>
@@ -45,16 +54,23 @@
 					{id:2,position:"护士",imgUrl:''},
 					{id:3,position:"药剂师",imgUrl:''},
 					{id:4,position:"药房",imgUrl:''}
-				]
+				],
+				total:"400",
+				pageSize:'5',
+				currentPage:1
+				
 			}
 		},
 		created(){
-			this.imgchang();
+			this.getDate();//获取所有公开简历
+			this.imgchang();//根据职位判断头像
 		},
 		methods:{
+			handleCurrentChange(val){
+				this.changeDate(val);
+			},
 			imgchang(){
 				this.resumes.forEach((v,i)=>{
-					console.log(v)
 					switch (v.position){
 						case "医生":
 							v.imgUrl = "../../../static/img/doctor.png";
@@ -72,7 +88,32 @@
 							break;
 					}
 				})
-				
+			},
+			changeDate(val){
+				this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeList",{
+					status:"1",
+					pageNo:val,
+					pageSize:this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.resumes = res.data.resultObj.personalResumeList;
+					}
+				})
+			},
+			getDate(){
+				this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeList",{
+					status:"1",
+					pageNo:this.currentPage,
+					pageSize:this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.resumes = res.data.resultObj.personalResumeList;
+						console.log(res.data.resultObj)
+					}
+				})
 			}
 		}
 	}
@@ -131,7 +172,7 @@ em{
 .fl dl dt em{
 	display: inline-block;
 	font-size: 14px;
-	width: 50px;
+	width: 100px;
 	text-align: center;
 	border-right: 1px solid #eee;
 }

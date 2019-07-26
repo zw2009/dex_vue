@@ -13,7 +13,7 @@
 				<ul class="nav-right">
 					<router-link to="/register" v-if="!loginfalg">{{register}}</router-link>
 					<router-link to="/login" v-if="!loginfalg">{{login}}</router-link>
-					<a v-if="loginfalg" >欢迎您登录思众云</a>
+					<router-link v-if="loginfalg" :to="{name:'doctormsg'}">欢迎您登录思众云</router-link>
 					<a v-if="loginfalg" @click="leave">退出</a>
 					<li id="inStorng">
 						<a href="http://www.51szyly.com/a/login" target="_blank">进入医疗云</a>

@@ -29,6 +29,7 @@ import searchresume from '@/components/doctorcare/SearchResume'
 	import findparttime from '@/components/doctorcare/FindPartTime'
 //个人中心
 import doctormsg from '@/components/personal/DoctorMsg'
+import personaldata from '@/components/personal/PersonalData'
 import myrelease from '@/components/personal/MyRelease'
 import invitationinterview from '@/components/personal/InvitationInterview'
 import myapplication from '@/components/personal/MyApplication'
@@ -72,8 +73,9 @@ let routes = [
 				]
 		},
 		{path: '/doctormsg',component: doctormsg,name:"doctormsg",meta:{title:"个人中心"},
-			redirect:'/doctormsg/myrelease',
+			redirect:'/doctormsg/personaldata',
 			children:[
+				{path:'/doctormsg/personaldata',component:personaldata,name:'personaldata'},
 				{path:'/doctormsg/myrelease',component:myrelease,name:'myrelease'},
 				{path:'/doctormsg/invitationinterview',component:invitationinterview,name:'invitationinterview'},
 				{path:'/doctormsg/myapplication',component:myapplication,name:'myapplication'},
