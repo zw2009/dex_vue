@@ -1,8 +1,22 @@
 <template>
 	<div class="full-time">
+		
 		<div class="container">
 			<h2>全职简历编辑中...</h2>
 			<div class="from-container">
+				<!--图片上传-->
+				<div class="uploadimg">
+						<el-upload
+						  class="avatar-uploader"
+						  action="https://jsonplaceholder.typicode.com/posts/"
+						  :show-file-list="false"
+						  :on-success="handleAvatarSuccess"
+						  :before-upload="beforeAvatarUpload">
+						  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+						  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+						  <el-button type="warning">上传头像</el-button>
+						</el-upload>
+					</div>
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-form-item label="简历名称" prop="compname" required>
 						<el-input v-model="ruleForm.compname" placeholder="请输入简历名称"></el-input>
@@ -38,8 +52,8 @@
 							<el-option :label="e.label" :value="e.dictId" v-for="e in educationlist" :key="e.dictId"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="薪资待遇" prop="salary" required>
-						<el-select v-model="ruleForm.salary" placeholder="请选择薪资待遇" required>
+					<el-form-item label="薪资要求" prop="salary" required>
+						<el-select v-model="ruleForm.salary" placeholder="请选择薪资要求" required>
 							<el-option :label="s.label" :value="s.dictId" v-for="s in Salarylist" :key="s.dictId"></el-option>
 						</el-select>
 					</el-form-item>
@@ -84,6 +98,7 @@
 	export default {
 		data() {
 			return {
+				imageUrl: '', //上传图片路径
 				quan: false,
 				jian: false,
 				experiencelist:[],//工作经验
@@ -205,13 +220,58 @@
 						message: '请选择出生日期',
 						trigger: 'blur'
 					}],
-				}
+				},
+				id:this.$route.query.id
 			};
 		},
 		created(){
 			this.getData();//获取下拉列表数据
+			this.getDataid();//获取需要编辑的id数据
 		},
 		methods: {
+			//获得所需编辑的id数据
+			getDataid() {
+				if(this.id){
+					this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeById",{
+						resumeId:this.id
+					})
+					.then((res)=>{
+						if(res.data.resultCode =="1"){
+						let data = res.data.resultObj.personalResume[0];
+						this.ruleForm.compname = data.resumeName;
+						this.ruleForm.region = data.position;
+						this.ruleForm.name = data.name;
+						this.ruleForm.sex = data.sex;
+						this.ruleForm.phone = data.phone;
+						this.ruleForm.birth = data.birthday;
+						this.ruleForm.through = data.experienceLabel;
+						this.ruleForm.address = data.workRegion;
+						this.ruleForm.content = data.workExperience;
+						this.ruleForm.introduce = data.introduce;
+						this.ruleForm.salary = data.salary;
+						this.ruleForm.educat = data.educationLabel;
+						this.ruleForm.status = Boolean(data.status);
+						}
+					})
+				}
+				
+			},
+			//上传图片
+			 handleAvatarSuccess(res, file) {
+		        this.imageUrl = URL.createObjectURL(file.raw);
+		      },
+		      beforeAvatarUpload(file) {
+		        const isJPG = file.type === 'image/jpeg';
+		        const isLt2M = file.size / 1024 / 1024 < 2;
+		
+		        if (!isJPG) {
+		          this.$message.error('上传头像图片只能是 JPG 格式!');
+		        }
+		        if (!isLt2M) {
+		          this.$message.error('上传头像图片大小不能超过 2MB!');
+		        }
+		        return isJPG && isLt2M;
+		      },
 			deleadd(e){//添加多个工作区域时删除功能
 				this.ruleForm.area.splice(e,1);
 			},
@@ -292,6 +352,7 @@
 </script>
 
 <style scoped="">
+
 .spanadd{
 	background: #eee;
 	margin: 2px;
@@ -330,6 +391,7 @@
 	background-color: #f2f2f2;
 }
 .from-container {
+	position: relative;
 	padding-top: 9px;
 	width: 740px;
 	margin: 0 auto;
@@ -344,4 +406,47 @@
     left: 659px;
     width: 90px;
 }
+	/*图片上传*/
+.uploadimg{
+	position: absolute;
+	top: 20px;
+	left:-120px;
+}
+>>>.el-upload{
+	width:100px;
+	height: 140px;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height:100px;
+    border: 1px solid #ccc;
+    line-height: 100px;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    display: block;
+  }
+>>>input.el-upload__input {
+    opacity: 0;
+}
+
 </style>

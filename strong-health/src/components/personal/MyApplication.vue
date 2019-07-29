@@ -4,57 +4,122 @@
 		<div class="exrt" id="myApply">
 			<h4><span>我的申请</span></h4>
 			<!--发布第一条-->
-			<div class="tit clearfix">
+			<div class="tit clearfix" v-for="a in applyList">
 				<!--发布左边-->
 				<div class="leftit">
 					<div class="menu">
-						<p><strong>内科医生</strong></p>
-						<p>湖南思众健康管理有限公司</p>
-						<p>申请于2019-05-26</p>
-						<p>长沙-岳麓</p>
+						<p><strong>{{a.positionLabel}}职位</strong></p>
+						<p>{{a.companyName}}</p>
+						<p>申请于{{GetDateStr(a.createTime)}}</p>
+						<p>{{a.city}}</p>
 					</div>
 				</div>
 				<!--发布右边-->
 				<div class="rigtit leftit">
 					<div class="showpop">
-						<p class="text-danger"><strong>5000-8000/月</strong></p>
+						<p class="text-danger"><strong>{{a.salaryLabel}}</strong></p>
 						<a class="apply" href="javascript:;">近两月申请：<strong class="text-danger">20</strong>人</a>
 					</div>
 					<div class="delete">
-						<strong class="text-danger reach" style="line-height: 80px;">刪除</strong>
+						<strong class="text-danger reach" style="line-height: 80px;" @click="deletData(a.id)">刪除</strong>
 					</div>
 				</div>
 			</div>
-			<!--发布第一条-->
-			<div class="tit clearfix">
-				<!--发布左边-->
-				<div class="leftit">
-					<div class="menu">
-						<p><strong>内科医生</strong></p>
-						<p>湖南思众健康管理有限公司</p>
-						<p>申请于2019-05-26</p>
-						<p>长沙-岳麓</p>
-					</div>
-				</div>
-				<!--发布右边-->
-				<div class="rigtit leftit">
-					<div class="showpop">
-						<p class="text-danger"><strong>5000-8000/月</strong></p>
-						<a class="apply" href="javascript:;">近两月申请：<strong class="text-danger">20</strong>人</a>
-					</div>
-					<div class="delete">
-						<strong class="text-danger reach" style="line-height: 80px;">刪除</strong>
-					</div>
-				</div>
-			</div>
+			<!--分页-->
+			<div class="block">
+			    <span class="demonstration"></span>
+			    <el-pagination
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-size="pageSize"
+			      layout="total, prev, pager, next, jumper"
+			      :total="total">
+			    </el-pagination>
+			  </div>
 		</div>
 	</div>
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				applyList:[],
+				total:400,
+				currentPage:1,
+				pageSize:10,
+				userId:JSON.parse(localStorage.getItem("user")).userId
+			}
+		},
+		created(){
+			this.getData();//获取我的申请数据
+		},
+		methods:{
+			deletData(id){
+				console.log(id)
+				 this.$confirm('此操作将永久删除该条申请, 是否继续?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+		        	this.$axios.post("/strong_portal_site/position/deleteApplicant",{
+						id:id
+					})
+					.then((res)=>{
+						if(res.data.resultCode == "1"){
+							this.$message({
+					            type: 'success',
+					            message: '删除成功!'
+					          });
+							this.getData()
+						}
+					})
+		        }).catch(() => {
+		          this.$message({
+		            type: 'info',
+		            message: '已取消删除'
+		          });          
+		        });
+				
+			},
+			handleCurrentChange(val){
+				this.getpage(val);
+			},
+			getpage(val){
+				this.$axios.post("/strong_portal_site/position/selectMyApplyList",{
+					crateUser:this.userId,
+					pageNo:val,
+					pageSize:this.pageSize
+					
+				}).then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.applyList = res.data.resultObj.myApplyList;
+						this.total = res.data.resultObj.totalSize;
+					}
+				})
+			},
+			getData(){
+				this.$axios.post("/strong_portal_site/position/selectMyApplyList",{
+					crateUser:this.userId,
+					pageNo:this.currentPage,
+					pageSize:this.pageSize
+					
+				}).then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.applyList = res.data.resultObj.myApplyList;
+						this.total = res.data.resultObj.totalSize;
+					}
+				})
+			}
+		}
+	}
 </script>
 
 <style scoped="">
+.block{
+	text-align: center;
+	margin: 20px 0;
+}
 /*右边*/
 
 .exrt {

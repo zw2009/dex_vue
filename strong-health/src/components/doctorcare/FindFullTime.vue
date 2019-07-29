@@ -2,17 +2,17 @@
 	<div class="find-full">
 		<!--搜索职位-->
 			<div class="search" style="display: flex;">
-				<input type="text" class="form-control" v-model="seach" placeholder="请输入搜索职位" id="sea" @change="seschfulls">
+				<input type="text" class="form-control" v-model="seach" placeholder="请输入搜索职位" @change="seschfulls">
 				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" @click="seschfulls">搜索</button>
 			</div>
 		<div class="bs-example" data-example-id="hoverable-table">
 				 <el-table
 				   :data="fulls"
 				   stripe
-				   
+
 				    style="width: 100%">
 		                <el-table-column
-		                  prop="positionName"
+		                  prop="positionLabel"
 		                  label="职位名"
 		                  width="180">
 		                </el-table-column>
@@ -42,9 +42,12 @@
 		                  prop=""
 		                  label="职位申请" 
 		                  width="180">
-		                   <el-button type="primary" size="mini">投递简历</el-button>
+		                  <template slot-scope="scope">
+		                  	<el-button type="primary" size="mini" @click.stop="changprop(scope.row)">投递简历</el-button>
+					      </template>
 	                	</el-table-column>
 				</el-table>
+				<!--分页-->
 				<div class="block">
 				    <span class="demonstration"></span>
 				    <el-pagination
@@ -55,6 +58,26 @@
 				      :total="total">
 				    </el-pagination>
 				  </div>
+				  <!--弹出层-->
+				<div class="provp" v-if="provp">
+					<i class="el-icon-error" @click="prophide"></i>
+					<ul style="font-weight:bold ;">
+						<li>姓名</li>
+						<li>电话</li>
+						<li>工作年限</li>
+						<li>职位</li>
+						<li>是否投递</li>
+					</ul>
+					<ul v-for="r in reslist">
+						<li>{{r.name}}</li>
+						<li>{{r.phone}}</li>
+						<li>{{r.experienceLabel}}</li>
+						<li>{{r.position}}</li>
+						<li><el-button type="primary" plain size="small" @click="comapp(r.resumeId)">确认投递</el-button></li>
+					</ul>
+					
+				</div>
+				  
 		</div>
 	</div>
 </template>
@@ -64,6 +87,9 @@
 		name:'find-full',
 		data(){
 			return{
+				reslist:[],
+				recruitId:'',//点击投递简历获取到的招聘信息的id
+				provp:false,
 				total:0,//默认数据总条数
 				pageSize:10,//每页的数据条数
 				currentPage:1,//默认开始页
@@ -72,9 +98,40 @@
 				application:false,
 				width:"300",
 				user:JSON.parse(localStorage.getItem("user")).userTyp,
+				userId:JSON.parse(localStorage.getItem("user")).userId
 			}
 		},
 		methods:{
+			comapp(id){
+				this.$axios.post("/strong_portal_site/position/saveApplyInfo",{
+					crateUser:this.userId,  //用户id
+					recruitId:this.recruitId, //当前招聘信息id
+					resumeId:id    //当前简历id
+				})
+				.then((res)=>{
+					if(res.data.resultCode = "1"){
+						this.$message({
+				          message: res.data.resultMessage,
+				          type: 'success'
+				       });
+					}
+				})
+			},
+			prophide(){//关闭弹出层
+				this.provp = false;
+			},
+			getreslist(){//获取全职简历列表信息
+				this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeById",{
+					resumeId:'',
+					createUser:this.userId,
+					resumelType:'2'
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.reslist = res.data.resultObj.personalResume;
+					}
+				})
+			},
 			getLocalTimes(row) { 
 				let date = new Date(row.updateTime);
 				let year = date.getFullYear();
@@ -85,6 +142,10 @@
 				date = year+'-'+month+'-'+day;
 				//console.log(date); // 2018-10-09
 				return date;
+			},
+			changprop(row){ //切换显示prop简历列表
+				this.provp = !this.provp;
+				this.recruitId = row.recruitId;
 			},
 			handleCurrentChange(val){
 				this.getUser(val);
@@ -106,7 +167,7 @@
 					status : 1, //状态
 					pageNo:this.currentPage ,
 					pageSize : this.pageSize,
-					positionName:this.seach
+//					positionName:this.seach
 				})
 				.then((res)=>{
 					if(res.data.resultCode == "1"){
@@ -124,12 +185,46 @@
 				this.application = true;
 				this.width = "238";
 			}
-			this.seschfulls();
+			this.seschfulls();//获取全职招聘信息列表
+			this.getreslist();//获取全职简历信息列表
 		}
 	}
 </script>
 
 <style scoped="">
+/*弹出层*/
+.provp{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	background: #eee;
+	width: 500px;
+	height:280px;
+	border-radius: 5px;
+	margin-top: -140px;
+	margin-left: -250px;
+	z-index: 999;
+	overflow: auto;
+	padding: 10px;
+}
+.provp ul{
+	border-bottom: 1px solid #ccc;
+	height: 40px;
+	line-height: 40px;
+	display: flex;
+	
+}
+.provp i{
+	font-size: 30px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	cursor: pointer;
+}
+.provp ul li{
+	text-align: center;
+	width: 20%;
+}
 .find-full {
     height:624px;
 }

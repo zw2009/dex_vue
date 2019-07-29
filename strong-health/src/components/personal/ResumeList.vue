@@ -18,14 +18,14 @@
 						</tr>
 					</thead>
 					<tbody class="timelook">
-						<tr v-for="r in resumes" @click="tolink(r.parful)">
+						<tr v-for="r in resumes" @click="tolink(r.resumelType,r.resumeId)">
 							<th scope="row">{{r.name}}</th>
-							<td>{{r.type}}</td>
+							<td>{{r.position}}</td>
 							<td>{{r.phone}}</td>
-							<td>{{r.work}}</td>
-							<td>{{r.pay}}</td>
-							<th class="full-part">{{r.parful}}</th>
-							<th class="text-danger deletem">删除</th>
+							<td>{{r.experienceLabel}}</td>
+							<td>{{r.salary}}</td>
+							<th class="full-part">{{partfull(r.resumelType)}}</th>
+							<th class="text-danger deletem" @click.stop="deleteresume(r.resumeId)">删除</th>
 						</tr>
 					</tbody>
 				</table>
@@ -40,25 +40,59 @@
 export default{
 	data(){
 		return{
-			resumes:[
-				{id:1,name:'王医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'全职'},
-				{id:2,name:'张医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'兼职'},
-				{id:3,name:'里医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'全职'},
-				{id:4,name:'尼医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'兼职'},
-				{id:5,name:'喀医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'全职'},
-				{id:6,name:'顿医生',type:'中医医生',phone:'18821887634',work:'3-5年',pay:'5000-6000元/月',parful:'兼职'},
-			]
+			resumes:[],
+			uesr:JSON.parse(localStorage.getItem("user")).userId
 		}
 	},
+	created(){
+		this.getData();
+	},
 	methods:{
-		tolink(parful){
-			if(parful == '全职'){
+		deleteresume(id){//删除当前简历
+			console.log(id);
+			this.$axios.post("/strong_portal_site/personalResume/deletepersonalResume",{
+				resumeId:id,
+				createUser:this.uesr
+			})
+			.then((res)=>{
+				console.log(res)
+			})
+		},
+		partfull(type){//切换显示全职兼职
+			if(type == "2"){
+				return "全职";
+			}else if(type == "1"){
+				return "兼职";
+			}
+		},
+		getData(){
+			this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeById",{
+				resumeId:'',
+				createUser:this.uesr,
+				resumelType:''
+			})
+			.then((res)=>{
+				if(res.data.resultCode == "1"){
+					this.resumes = res.data.resultObj.personalResume;
+					console.log(res.data.resultObj.personalResume)
+				}
+				
+			})
+		},
+		tolink(parful,id){
+			if(parful == '2'){
 				this.$router.push({
-					name:'fulltime'
+					name:'fulltime',
+					query:{
+						id:id
+					}
 				})
-			}else{
+			}else if(parful == '1'){
 				this.$router.push({
-					name:'parttime'
+					name:'parttime',
+					query:{
+						id:id
+					}
 				})
 			}
 		}

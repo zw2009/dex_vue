@@ -5,43 +5,37 @@
 			<div class="from-container">
 				<el-form  label-width="100px" class="demo-ruleForm">
 					<el-form-item label="简历名称" >
-						米思科的简历
+						{{ruleForm.resumeName}}
 					</el-form-item>
 					<el-form-item label="应聘职位">
-						医生
+						{{ruleForm.position}}
 					</el-form-item>
 					<el-form-item label="姓名">
-						米思科
+						{{ruleForm.name}}
 					</el-form-item>
 					<el-form-item label="性别">
-						  男
+						{{ruleForm.sex}}
 					</el-form-item>
 					<el-form-item label="电话号码">
-						13975121124
+						{{ruleForm.phone}}
 					</el-form-item>
 					<el-form-item label="出生日期">
-						1995-05-06
+						{{ruleForm.birthday}}
 					</el-form-item>
 					<el-form-item label="工作年限">
-						3-5年
+						{{ruleForm.experienceLabel}}
 					</el-form-item>
 					<el-form-item label="薪资要求">
-						5000-8000元/月
-					</el-form-item>
-					<el-form-item label="职位福利" >
-						周末双休，五险一金
+						{{ruleForm.salary}}
 					</el-form-item>
 					<el-form-item label="工作区域">
-						湖南省长沙市岳麓区奥克斯缤纷广场
+						{{ruleForm.workRegion}}
 					</el-form-item>
 					<el-form-item label="工作经历">
-						1.电脑应用熟练，熟练操作word,excel,,Outlook, ERP等各种办公软件;
-　　						2.勤奋上进好学，工作细心，条理清晰，踏实肯干，有很强的责任心;
-　　						3.性格开朗乐观，善于人际交流和沟通，具备团队合作精神;
-　　						4.喜好书法并有一定的书写能力。
+						{{ruleForm.workExperience}}
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="putData">编辑</el-button>
+						<el-button type="primary" @click="getId(ruleForm.resumeId)">编辑</el-button>
 						<el-button @click="caaback">返回</el-button>
 					</el-form-item>
 				</el-form>
@@ -55,31 +49,37 @@
 	export default {
 		data() {
 			return {
-				ruleForm: {
-					compname: '',
-					region: '',
-					name: '',
-					sex:'',
-					phone: '',
-					birth: '',
-					through: '',
-					salary: '',
-					area: [],
-					address: '',
-					content: '',
-				},
+				id:this.$route.query.id,
+				ruleForm: {},
 			};
 		},
 		methods: {
-			putData() {
-				console.log("修改此条id数据并提交到服务器")
+			getData() {
+				this.$axios.post("/strong_portal_site/personalResume/selectpersonalResumeById",{
+					resumeId:this.id
+				})
+				.then((res)=>{
+					if(res.data.resultCode =="1"){
+					
+						this.ruleForm = res.data.resultObj.personalResume[0];
+					}
+					
+				})
+			},
+			getId(id){
+				this.$router.push({
+					name:"fulltime",
+					query:{
+						id:id
+					}
+				})
 			},
 			caaback() {
 				history.back(-1);
 			}
 		},
 		created(){
-			console.log("获取id数据渲染")
+			this.getData();
 		}
 	}
 </script>
@@ -112,5 +112,6 @@
 .from-container {
 	width: 600px;
 	margin: 0 auto;
+	    margin-bottom: 160px;
 }
 </style>

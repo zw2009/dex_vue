@@ -24,6 +24,9 @@ import parttime from '@/components/doctorcare/PartTime'
 import fulltimelook from '@/components/doctorcare/FullTimeLook'
 import parttimelook from '@/components/doctorcare/PartTimeLook'
 import searchresume from '@/components/doctorcare/SearchResume'
+	//医护人才搜简历二级路由
+	import resumefull from '@/components/doctorcare/ResumeFull'
+	import resumepart from '@/components/doctorcare/ResumePart'
 	//医护人才二级路由
 	import findfulltime from '@/components/doctorcare/FindFullTime'
 	import findparttime from '@/components/doctorcare/FindPartTime'
@@ -87,7 +90,13 @@ let routes = [
 		{path: '/fulltime',component: fulltime,name:"fulltime",meta:{ title:"全职简历"}},
 		{path: '/fulltimelook',component: fulltimelook,name:"fulltimelook",meta:{ title:"全职简历预览"}},
 		{path: '/parttime',component: parttime,name:"parttime",meta:{ title:"兼职简历"}},
-		{path: '/searchresume',component: searchresume,name:"searchresume",meta:{ title:"搜简历"}},
+		{path: '/searchresume',component: searchresume,name:"searchresume",meta:{ title:"搜简历"},
+			redirect:'/doctorcare/resumefull',
+			children:[
+				{path:'/doctorcare/resumefull',component:resumefull,name:'resumefull'},
+				{path:'/doctorcare/resumepart',component:resumepart,name:'resumepart'}
+			]
+		},
 		{path: '/parttimelook',component: parttimelook,name:"parttimelook",meta:{ title:"兼职简历预览"}},
 		{path:'/szforum',component:szforum,name:'szforum',meta:{title:'思众论坛'}},
 		

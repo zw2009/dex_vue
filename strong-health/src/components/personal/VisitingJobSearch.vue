@@ -20,62 +20,153 @@
 								</tr>
 							</thead>
 							<tbody class="timelook">
-								<tr>
-									<th scope="row">王某</th>
-									<td>内科医生</td>
-									<td>13945622546</td>
-									<td>3-5年</td>
-									<td>5000-6000/月</td>
-									<th class="full-part">全职</th>
-									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
-									<th class="text-danger deletem">删除</th>
-								</tr>
-								<tr>
-									<th scope="row">王某</th>
-									<td>内科医生</td>
-									<td>13945622546</td>
-									<td>3-5年</td>
-									<td>5000-6000/月</td>
-									<th class="full-part">兼职</th>
-									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
-									<th class="text-danger deletem">删除</th>
-								</tr>
-								<tr>
-									<th scope="row">王某</th>
-									<td>内科医生</td>
-									<td>13945622546</td>
-									<td>3-5年</td>
-									<td>5000-6000/月</td>
-									<th class="full-part">全职</th>
-									<th class="send-invitation"><button class="btn btn-primary btn-sm">发送邀请</button></th>
-									<th class="text-danger deletem">删除</th>
+								<tr v-for="a in applyList">
+									<th scope="row">{{a.name}}</th>
+									<td>{{a.positionLabel}}</td>
+									<td>{{a.phone}}</td>
+									<td>{{a.experienceLabel}}</td>
+									<td>{{a.salaryLabel}}</td>
+									<th class="full-part">{{changnum(a.resumelType)}}</th>
+									<th class="send-invitation"><button class="btn btn-primary btn-sm" @click="sendin(a.recruitId,a.resumeId)" :disabled="disab">发送邀请</button></th>
+									<th class="text-danger deletem" @click="delectid(a.id)">删除</th>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
-		</div>
-		<!--面试邀请模态框弹窗-->
-		<div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modede">
-			<div class="modal-dialog modal-sm" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel1">面试信息</h4>
-					</div>
-					<div class="modal-body">
-						投递成功
-					</div>
-				</div>
-			</div>
+				<!--分页-->
+				<div class="block">
+			    <span class="demonstration"></span>
+			    <el-pagination
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-size="pageSize"
+			      layout="total, prev, pager, next, jumper"
+			      :total="total">
+			    </el-pagination>
+			  </div>
 		</div>
 	</div>
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				id:this.$route.query.id,
+				applyList:[],
+				currentPage:1,
+				pageSize:10,
+				total:0,
+				userId:JSON.parse(localStorage.getItem("user")).userId,
+				disab:false
+			}
+		},
+		created(){
+			this.getData();//获取来访求职者信息列表
+		},
+		methods:{
+			
+			sendin(tid,eid){//发送邀请	
+				
+				this.$confirm('是否发送邀请, 是否继续?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+		        	this.$axios.post("/strong_portal_site/position/saveInvitationInfo",{
+						crateUser:this.userId,
+						recruitId:tid,
+						resumeId:eid
+					})
+					.then((res)=>{
+						if(res.data.resultCode == "1"){
+							this.$message({
+				            type: 'success',
+				            message: '发送成功!'
+				          });
+				          this.disab = true;
+						}
+						
+					})
+		        }).catch(() => {
+		          this.$message({
+		            type: 'info',
+		            message: '已取消'
+		          });          
+		        });
+				
+			},
+			delectid(id){//删除当前获取到的id的信息
+				this.$confirm('是否永久删除该信息, 是否继续?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+		        	this.$axios.post("/strong_portal_site/position/deleteApplicant",{
+		        		id: id
+		        	})
+		        	.then((res)=>{
+		        		this.getData();
+		        		this.$message({
+				            type: 'success',
+				            message: '删除成功!'
+				          });
+		        	})
+		        }).catch(() => {
+		          this.$message({
+		            type: 'info',
+		            message: '已取消删除'
+		          });          
+		        });
+			},
+			handleCurrentChange(val){
+				this.getpage(val);
+			},
+			changnum(type){
+				if(type == "2"){
+					return "全职";
+				}else if(type == "1"){
+					return "兼职";
+				}
+			},
+			getpage(val){
+				this.$axios.post("/strong_portal_site/position/selectApplyList",{
+					crateUser: this.userid, 
+					status: "1",
+					pageNo:val,
+					pageSize :this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.applyList = res.data.resultObj.recruitList
+						console.log(res.data.resultObj.recruitList)
+					}
+				})
+			},
+			getData(){
+				this.$axios.post('/strong_portal_site/position/selectApplyList',{
+					recruitId:this.id,
+					pageNo:1,
+					pageSize:this.pageSize,
+				}).then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.applyList = res.data.resultObj.applyList
+						console.log(res.data)
+					}
+				})
+			}
+		}
+	}
 </script>
 
 <style scoped="">
+.block{
+text-align: center;
+margin: 20px 0;
+}
 .visiting-job-search {
     margin-top: 55px;
     height: 712px;

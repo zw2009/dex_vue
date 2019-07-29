@@ -21,7 +21,8 @@
 					<div class="showpop">
 						<p class="text-success">{{changType(m.recruitType)}}</p>
 						<p><a style="cursor: pointer;">{{changestatus(m.status)}}</a></p>
-						<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>
+						<!--<router-link tag="a" target="_blank" class="text-danger visitor" :to="{name:'visitingjobsearch'}">查看来访求职者</router-link>-->
+						<a class="text-danger visitor" href="javascript:void(0)" @click="tojob(m.recruitId)">查看来访求职者</a>
 					</div>
 					
 					<div class="delete">
@@ -60,6 +61,16 @@
 			}
 		},
 		methods:{
+			tojob(id){//跳转查看来访者求职信息
+				let routeData = this.$router.resolve({
+					name:"visitingjobsearch",
+					query:{
+						id:id
+					}
+				});
+			window.open(routeData.href,"_blank");
+				
+			},
 			changType(type){
 				if(type == "1"){
 					return "全职";
@@ -88,7 +99,7 @@
 		          type: 'warning'
 		        }).then(() => {
 		        	this.$axios.post("/strong_portal_site/recruitInfo/deleteRecruitInfoList",{
-		        		recruitId: id
+		        		id: id
 		        	})
 		        	.then((res)=>{
 		        		 this.getpage();
@@ -127,8 +138,8 @@
 			this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
 				crateUser: this.userid, 
 				status: "1",
-				pageNo:1 ,
-				pageSize :5
+				pageNo:this.currentPage ,
+				pageSize :this.pageSize
 			})
 			.then((res)=>{
 				if(res.data.resultCode == "1"){

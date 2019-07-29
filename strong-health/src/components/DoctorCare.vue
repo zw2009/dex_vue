@@ -10,7 +10,7 @@
 		
 		<div class="container" >
 			<div class="fabu">
-				<router-link :to="{name:'publishrecruit'}">发布招聘</router-link>
+				<router-link :to="{name:'publishrecruit'}"  v-if="fabu">发布招聘</router-link>
 				<!--<a href="jianzhifabu.html" type="button" class="btn btn-success">发布兼职招聘</a>-->
 			</div>
 			
@@ -37,6 +37,7 @@
 		name:"doctorcare",
 		data(){
 			return{
+				fabu:false,
 				bioshow:false,
 				user:JSON.parse(localStorage.getItem("user")).userTyp,
 				loginuser:sessionStorage.getItem("LoginUser")
@@ -45,8 +46,10 @@
 		created(){
 			if(this.user == "2"){
 				this.bioshow = false;
+				this.fabu = true;
 			}else if(this.user == "3"){
 				this.bioshow = true;
+				this.fabu = false;
 			}
 			console.log(this.loginuser)
 			if(this.loginuser == "" || this.loginuser == null){
