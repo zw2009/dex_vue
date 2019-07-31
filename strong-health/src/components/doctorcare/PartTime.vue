@@ -7,7 +7,7 @@
 				<div class="uploadimg">
 						<el-upload
 						  class="avatar-uploader"
-						  action="https://jsonplaceholder.typicode.com/posts/"
+						  action="http://127.0.0.1:8080"
 						  :show-file-list="false"
 						  :on-success="handleAvatarSuccess"
 						  :before-upload="beforeAvatarUpload">
@@ -15,13 +15,14 @@
 						  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						  <el-button type="warning">上传头像</el-button>
 						</el-upload>
-					</div>
+				</div>
 				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 					<el-form-item label="简历名称" prop="compname" required>
 						<el-input v-model="ruleForm.compname" placeholder="请输入简历名称"></el-input>
 					</el-form-item>
-					<el-form-item label="应聘职位" prop="region" required>
-						<el-input v-model="ruleForm.region" placeholder="请输入应聘职位"></el-input>
+					<el-form-item label="职位类别" prop="region">
+						<el-select v-model="ruleForm.region" placeholder="请选择职位类别" required>
+							<el-option :label="p.label" :value="p.dictId" v-for="p in positionlist" :key="p.dictId"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="姓名" prop="name" required>
@@ -102,6 +103,7 @@ export default {
 			jian: false,
 			experiencelist:[],//工作经验
 			educationlist:[],//学历
+			positionlist:[],//岗位数据展示
 			userid:JSON.parse(localStorage.getItem("user")).userId,
 			options: [{
 				value: '湖南省',
@@ -231,12 +233,11 @@ export default {
 						this.ruleForm.sex = data.sex;
 						this.ruleForm.phone = data.phone;
 						this.ruleForm.birth = data.birthday;
-						this.ruleForm.through = data.experienceLabel;
+						this.ruleForm.through = data.experience;
 						this.ruleForm.address = data.workRegion;
-						this.ruleForm.content = data.workExperience;
+						this.ruleForm.content = data.introduce;
 						this.ruleForm.introduce = data.introduce;
-						this.ruleForm.salary = data.salary;
-						this.ruleForm.educat = data.educationLabel;
+						this.ruleForm.educat = data.education;
 						this.ruleForm.status = Boolean(data.status);
 						}
 					})
@@ -273,6 +274,7 @@ export default {
 				if(res.data.resultCode == "1"){
 					this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
 					this.educationlist = res.data.resultObj.educationlist;  //学历要求
+					this.positionlist = res.data.resultObj.positionlist; //职位
 				}
 			})
 		},
@@ -282,16 +284,18 @@ export default {
 					if(valid) {
 						//提交数据到后台
 						this.$axios.post("/strong_portal_site/personalResume/savepersonalResume",{
+							resumeId:this.id,
 							createUser:this.userid,    			//用户id
 							resumeName:this.ruleForm.compname,	//简历名称
-							positionName:this.ruleForm.region,	//应聘岗位
+							position:this.ruleForm.region,	//应聘岗位
 							name:this.ruleForm.name,			//姓名
 							sex:this.ruleForm.sex,				//性别
 							phone:this.ruleForm.phone,			//电话
 							birthday:this.ruleForm.birth,		//出生年月
 							freeTime:this.ruleForm.type1.join('，'),		//空闲时间
 							experience:this.ruleForm.through,	//工作经验
-							Salary:"",							//薪资待遇
+							salary:"",							//薪资待遇
+							photoUrl:"",						//照片路径
 							workRegion:this.ruleForm.area.join("、"),//工作区域
 							workExperience:"",	    			//工作经历
 							introduce:	this.ruleForm.content,	//自我介绍

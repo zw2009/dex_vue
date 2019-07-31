@@ -6,7 +6,7 @@
 					<li class="logo">
 						<router-link to="/"><img src="@/assets/logo.png"></router-link>
 					</li>
-					<li :data="routs" v-for="(v,i) in routs" :class="{cur:changeRed == i}" @click="change(i),routeChange(v.to)">
+					<li :data="routs" v-for="(v,i) in routs" @click="routeChange(v.to)">
 						<a>{{v.title}}</a>
 					</li>
 				</ul>

@@ -21,12 +21,15 @@ import doctorcare from '@/components/DoctorCare'
 import publishrecruit from '@/components/doctorcare/PublishRecruit'
 import fulltime from '@/components/doctorcare/FullTime'
 import parttime from '@/components/doctorcare/PartTime'
+import timedetails from '@/components/doctorcare/TimeDetails' //公司简介详情
 import fulltimelook from '@/components/doctorcare/FullTimeLook'
 import parttimelook from '@/components/doctorcare/PartTimeLook'
 import searchresume from '@/components/doctorcare/SearchResume'
+import fullpartdetails from '@/components/doctorcare/FullPartDetails' //简历详情
 	//医护人才搜简历二级路由
 	import resumefull from '@/components/doctorcare/ResumeFull'
 	import resumepart from '@/components/doctorcare/ResumePart'
+
 	//医护人才二级路由
 	import findfulltime from '@/components/doctorcare/FindFullTime'
 	import findparttime from '@/components/doctorcare/FindPartTime'
@@ -75,6 +78,7 @@ let routes = [
 				{path:'/findparttime',component:findparttime,name:'findparttime',meta:{title:'医护人才'}}
 				]
 		},
+		{path: '/timedetails',component: timedetails,name:"timedetails",meta:{title:"公司详情"}},
 		{path: '/doctormsg',component: doctormsg,name:"doctormsg",meta:{title:"个人中心"},
 			redirect:'/doctormsg/personaldata',
 			children:[
@@ -97,6 +101,7 @@ let routes = [
 				{path:'/doctorcare/resumepart',component:resumepart,name:'resumepart'}
 			]
 		},
+		{path: '/fullpartdetails',component: fullpartdetails,name:"fullpartdetails",meta:{ title:"简历详情"}},
 		{path: '/parttimelook',component: parttimelook,name:"parttimelook",meta:{ title:"兼职简历预览"}},
 		{path:'/szforum',component:szforum,name:'szforum',meta:{title:'思众论坛'}},
 		

@@ -51,7 +51,6 @@
 				this.bioshow = true;
 				this.fabu = false;
 			}
-			console.log(this.loginuser)
 			if(this.loginuser == "" || this.loginuser == null){
 				this.$router.push("/login");
 				this.$message({

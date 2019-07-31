@@ -1,5 +1,5 @@
 <template>
-	<div class="interview">
+	<div class="interview clearfix">
 		<!--面试邀请-->
 		<div class="exrt" id="invitation">
 			<h4><span>面试邀请</span></h4>
@@ -15,41 +15,163 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>湖南思众管理有限公司</td>
-							<td class="textover conts">xx：您好，我们很高兴的通知您来参加我公司的面试，具体安排如邮件下方，请准时前来！ 面试公司：湖南思众管理有限公司 面试职位：理疗医生 面试时间：2019-03-20 10:00 面试地址：长沙市岳麓区奥克斯缤纷广场 联系人：人事1 联系电话：0731-77886655
+						<tr v-for="(m,i) in mess">
+							<th scope="row">{{i+1}}</th>
+							<td>{{m.companyName}}</td>
+							<td class="textover conts"  @click="getm(m)">{{m.name}}：您好，我们很高兴的通知您来参加我公司的面试，具体安排请点击此处，请准时前来！ 面试公司：{{m.companyName}} 面试职位：{{m.positionName}} 面试时间：{{GetDateStr(m.createTime)}} 面试地址：长沙市岳麓区奥克斯缤纷广场 联系人：{{m.name}} 联系电话：{{m.phone}}
 							</td>
-							<td>2019-03-18 17:06</td>
-							<td class="delete2 text-danger">删除</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>湖南思众管理有限公司</td>
-							<td class="textover conts">xx：您好，我们很高兴的通知您来参加我公司的面试，具体安排如邮件下方，请准时前来！ 面试公司：湖南思众管理有限公司 面试职位：理疗医生 面试时间：2019-03-20 10:00 面试地址：长沙市岳麓区奥克斯缤纷广场 联系人：人事2 联系电话：0731-77886655
-							</td>
-							<td>2019-03-18 17:06</td>
-							<td class="delete2 text-danger">删除</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td>湖南思众管理有限公司</td>
-							<td class="textover conts">xx：您好，我们很高兴的通知您来参加我公司的面试，具体安排如邮件下方，请准时前来！ 面试公司：湖南思众管理有限公司 面试职位：理疗医生 面试时间：2019-03-20 10:00 面试地址：长沙市岳麓区奥克斯缤纷广场 联系人：人事3 联系电话：0731-77886655
-							</td>
-							<td>2019-03-18 17:06</td>
-							<td class="delete2 text-danger">删除</td>
+							<td>{{GetDateStr(m.createTime)}}</td>
+							<td class="delete2 text-danger" @click.stop="deletem(m.id)">删除</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
+		<!--分页-->
+		<div class="block">
+		    <span class="demonstration"></span>
+		    <el-pagination
+		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
+		      :page-size="pageSize"
+		      layout="total, prev, pager, next, jumper"
+		      :total="total">
+		    </el-pagination>
+		  </div>
+		<!--弹出层-->
+		<div class="provp" v-if="propshow">
+			<i class="el-icon-error" @click="close"></i>
+			<h4>主题内容</h4>
+			<p>{{propss.name}}：您好，您好，我们很高兴的通知您来参加我公司的面试，具体安排如下，请准时前来！ </p>
+			<p>面试公司：{{propss.companyName}} </p>
+			<p>面试职位：{{propss.positionName}} </p>
+			<p>面试时间：{{GetDateStr(propss.createTime)}}</p>
+			<p>面试地址：{{propss.city}}{{propss.area}}{{propss.address}} </p>
+			<p> 联系人：{{propss.name}} </p>
+			<p>联系电话：{{propss.phone}}</p>
+		</div>
 	</div>
 </template>
 
 <script>
+	export default{
+		data(){
+			return{
+				propshow:false,
+				mess:[],
+				currentPage:1,
+				pageSize:15,
+				total:0,
+				userId:JSON.parse(localStorage.getItem("user")).userId,
+				propss:{}
+			}
+		},
+		created(){
+			this.getData();
+		},
+		methods:{
+			getm(m){//点击获取当前弹窗需要的数据
+				this.propshow = true;
+				this.propss.companyName = m.companyName;
+				this.propss.positionName = m.positionName;
+				this.propss.createTime = m.createTime;
+				this.propss.city = m.city;
+				this.propss.area = m.area;
+				this.propss.address = m.address;
+				this.propss.name = m.name;
+				this.propss.phone = m.phone;
+			},
+			close(){
+				this.propshow = false;
+			},
+			deletem(id){
+				console.log(id+"删除收到邀请信息");
+				 this.$confirm('此操作将永久删除该条邀请, 是否继续?', '提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        }).then(() => {
+		        	this.$axios.post("/strong_portal_site/position/deleteApplicant",{
+						id:id
+					}).then((res)=>{
+						this.getData();
+						this.$message({
+			            type: 'success',
+			            message: '删除成功!'
+			          });
+					})
+		        }).catch(() => {
+		          this.$message({
+		            type: 'info',
+		            message: '已取消删除'
+		          });          
+		        });
+			},
+			handleCurrentChange(val){
+				this.getpage(val)
+			},
+			getpage(val){
+				this.$axios.post("/strong_portal_site/position/selectMyInvitationList",{
+					createUser:this.userId,
+					pageNo:val,
+					pageSize:this.pageSize
+				}).then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.mess = res.data.resultObj.myInvitationList;
+					}
+				})
+			},
+			getData(){
+				this.$axios.post("/strong_portal_site/position/selectMyInvitationList",{
+					createUser:this.userId,
+					pageNo:this.currentPage,
+					pageSize:this.pageSize
+				}).then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.mess = res.data.resultObj.myInvitationList;
+					}
+				})
+			}
+		}
+	}
 </script>
 
 <style scoped="">
+.block{
+	position: absolute;
+	bottom:200px;
+	left: 40%;
+}
+/*弹出层*/
+.provp{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translateX(-50%) translateY(-70%);
+	z-index: 999;
+	width: 400px;
+	background: #eee;
+	border-top: 5px solid #FF6000;
+	padding: 20px;	
+	padding-top: 0;
+	border-radius: 5px;
+}
+.provp i{
+	position: absolute;
+	right: 0;
+	top: 2px;
+	font-size: 30px;
+	cursor: pointer;
+}
+.provp h4{
+	border-bottom: 1px solid #000;
+	height: 40px;
+	line-height: 40px;
+	margin: 0;
+	margin-bottom: 20px;
+}
 /*右边*/
 
 .exrt {
@@ -227,4 +349,5 @@ tbody tr{
 .delete .reach{
 	cursor: pointer;
 }
+
 </style>

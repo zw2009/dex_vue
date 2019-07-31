@@ -18,9 +18,9 @@
 			</div>
 			<div class="upadta">
 				<ul>
-					<li><span>用户名：</span><input type="text" value="章伟" /></li> 
-					<li><span>公司名：</span><input disabled="" type="text" value="湖南思众管理有限公司" /><strong class="el-icon-edit">修改</strong></li>
-					<li><span>手机号码：</span><input type="phone" value="18821882252" /><strong class="el-icon-edit">修改</strong></li>
+					<li><span>用户名：</span><input type="text" :value="persons.userName" /></li> 
+					<li><span>公司名：</span><input disabled="" type="text" :value="persons.companyname" /><strong class="el-icon-edit">修改</strong></li>
+					<li><span>手机号码：</span><input type="phone" :value="persons.loginName" /><strong class="el-icon-edit">修改</strong></li>
 					<li><span>邮箱：</span><input type="email"  value="" /><strong class="el-icon-edit">修改</strong></li>
 				</ul>
 			</div>
@@ -33,8 +33,13 @@
 		name:'persdata',
 		data(){
 			return{
-				 imageUrl: '../../../static/img/doctor.png'
+				 imageUrl: '../../../static/img/doctor.png',
+				 persons:{},
+				 user:JSON.parse(localStorage.getItem("user"))
 			}
+		},
+		created(){
+			this.persons = this.user;
 		},
 		 methods: {
 	      handleAvatarSuccess(res, file) {

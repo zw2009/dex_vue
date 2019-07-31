@@ -11,7 +11,7 @@
 					<img src="img/health/zhanwei.png" />
 					<div class="menu">
 						<p><strong>{{m.companyName}}</strong></p>
-						<p>{{m.positionName}}</p>
+						<p>{{m.positionLabel}}</p>
 						<p>{{GetDateStr(m.updateTime)}}</p>
 						<p>{{m.city}}-{{m.address}}</p>
 					</div>
@@ -99,10 +99,10 @@
 		          type: 'warning'
 		        }).then(() => {
 		        	this.$axios.post("/strong_portal_site/recruitInfo/deleteRecruitInfoList",{
-		        		id: id
+		        		recruitId: id
 		        	})
 		        	.then((res)=>{
-		        		 this.getpage();
+		        		 this.getData();
 		        		this.$message({
 				            type: 'success',
 				            message: '删除成功!'
@@ -120,7 +120,7 @@
 			},
 			getpage(val){
 				this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
-					crateUser: this.userid, 
+					createUser: this.userid, 
 					status: "1",
 					pageNo:val,
 					pageSize :this.pageSize
@@ -129,26 +129,27 @@
 					if(res.data.resultCode == "1"){
 						this.total = res.data.resultObj.totalSize;
 						this.myrels = res.data.resultObj.recruitList
-						console.log(res.data.resultObj.recruitList)
 					}
 				})
-			}
+			},
+			getData(){
+				this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
+					createUser: this.userid, 
+					status: "1",
+					pageNo:this.currentPage ,
+					pageSize :this.pageSize
+				})
+				.then((res)=>{
+					if(res.data.resultCode == "1"){
+						this.total = res.data.resultObj.totalSize;
+						this.myrels = res.data.resultObj.recruitList;
+					}
+					
+				})
+				}
 		},
 		created(){
-			this.$axios.post("/strong_portal_site/recruitInfo/selectRecruitInfobyUserId",{
-				crateUser: this.userid, 
-				status: "1",
-				pageNo:this.currentPage ,
-				pageSize :this.pageSize
-			})
-			.then((res)=>{
-				if(res.data.resultCode == "1"){
-					this.total = res.data.resultObj.totalSize;
-					this.myrels = res.data.resultObj.recruitList;
-					console.log(res.data.resultObj.recruitList)
-				}
-				
-			})
+			this.getData();
 		}
 	}
 </script>

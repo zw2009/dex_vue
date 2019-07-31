@@ -55,7 +55,7 @@ footer {
 }
 
 footer .footer-sy {
-	width: 1200px;
+	width:620px;
 	margin: 0 auto;
 	overflow: hidden;
 	padding-top: 30px;

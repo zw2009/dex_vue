@@ -1,7 +1,7 @@
 <template>
 	<div class="find-part">
 		<div class="search" style="display: flex;">
-				<input type="text" class="form-control" placeholder="请输入搜索职位" v-model="seach" @change="seachfulls">
+				<input type="text" class="form-control" placeholder="请输入搜索职位" v-model="seach" @keyup="seachfulls">
 				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" @click="seachfulls">搜索</button>
 			</div>
 		<div class="bs-example" data-example-id="hoverable-table">
@@ -20,7 +20,8 @@
 		                  width="width">
 		                </el-table-column>
 		                 <el-table-column
-		                  prop="address"
+		                  prop="area"
+		                  :formatter="cityarea"
 		                  label="工作地点"
 		                  width="180">
 		                </el-table-column>
@@ -34,6 +35,14 @@
 		                  :formatter="getLocalTimes"
 		                  label="发布时间"
 		                  width="180">
+		                </el-table-column>
+		                <el-table-column
+		                  prop=""
+		                  label="查看"
+		                  width="70">
+		                  <template slot-scope="scope">
+		                  	<el-button type="primary" size="mini" @click.stop="timedestails(scope.row)">详情</el-button>
+					      </template>
 		                </el-table-column>
 		                <el-table-column v-if="application"
 		                  prop=""
@@ -68,7 +77,7 @@
 						<li>{{r.name}}</li>
 						<li>{{r.phone}}</li>
 						<li>{{r.experienceLabel}}</li>
-						<li>{{r.position}}</li>
+						<li>{{r.positionLabel}}</li>
 						<li><el-button type="primary" plain size="small"  @click="comapp(r.resumeId)">确认投递</el-button></li>
 					</ul>
 				</div>
@@ -96,9 +105,22 @@
 			}
 		},
 		methods:{
+			timedestails(row){//获取此条id的详情
+				let routeData = this.$router.resolve({
+					name:'timedetails',
+					query:{
+						id:row.recruitId
+					}
+				});
+				window.open(routeData.href,"blank");
+				
+			},
+			cityarea(row){//城市和区域显示
+				return row.city+"-"+row.area;
+			},
 			comapp(id){
 				this.$axios.post("/strong_portal_site/position/saveApplyInfo",{
-					crateUser:this.userId,  //用户id
+					createUser:this.userId,  //用户id
 					recruitId:this.recruitId, //当前招聘信息id
 					resumeId:id    //当前简历id
 				})
@@ -123,7 +145,6 @@
 				.then((res)=>{
 					if(res.data.resultCode == "1"){
 						this.reslist = res.data.resultObj.personalResume;
-						console.log(res.data.resultObj.personalResume)
 					}
 				})
 			},
@@ -162,7 +183,7 @@
 					status : 1, //状态
 					pageNo:this.currentPage ,
 					pageSize : this.pageSize,
-					positionName:this.seach
+					selectName:this.seach
 				})
 				.then((res)=>{
 					if(res.data.resultCode == "1"){

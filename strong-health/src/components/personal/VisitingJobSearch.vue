@@ -75,7 +75,7 @@
 		          type: 'warning'
 		        }).then(() => {
 		        	this.$axios.post("/strong_portal_site/position/saveInvitationInfo",{
-						crateUser:this.userId,
+						createUser:this.userId,
 						recruitId:tid,
 						resumeId:eid
 					})
@@ -85,7 +85,7 @@
 				            type: 'success',
 				            message: '发送成功!'
 				          });
-				          this.disab = true;
+				  
 						}
 						
 					})
@@ -132,7 +132,7 @@
 			},
 			getpage(val){
 				this.$axios.post("/strong_portal_site/position/selectApplyList",{
-					crateUser: this.userid, 
+					createUser: this.userid, 
 					status: "1",
 					pageNo:val,
 					pageSize :this.pageSize

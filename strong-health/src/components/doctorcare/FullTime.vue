@@ -4,25 +4,22 @@
 		<div class="container">
 			<h2>全职简历编辑中...</h2>
 			<div class="from-container">
-				<!--图片上传-->
-				<div class="uploadimg">
-						<el-upload
-						  class="avatar-uploader"
-						  action="https://jsonplaceholder.typicode.com/posts/"
-						  :show-file-list="false"
-						  :on-success="handleAvatarSuccess"
-						  :before-upload="beforeAvatarUpload">
-						  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-						  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						  <el-button type="warning">上传头像</el-button>
-						</el-upload>
-					</div>
-				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+				<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" enctype="multipart/form-data">
 					<el-form-item label="简历名称" prop="compname" required>
 						<el-input v-model="ruleForm.compname" placeholder="请输入简历名称"></el-input>
 					</el-form-item>
-					<el-form-item label="应聘职位" prop="region" required>
-						<el-input v-model="ruleForm.region" placeholder="请输入应聘职位"></el-input>
+					<el-form-item label="上传图片" prop="compname" required>
+						<div class="input-img">
+							点击上传头像
+							<input type="file" name="imgurl" id="imgurl" ref="imgurl" @change="getFile" value="" />
+							<img :src="photoUrl"/>
+						</div>
+					</el-form-item>
+					
+					
+					<el-form-item label="职位类别" prop="region">
+						<el-select v-model="ruleForm.region" placeholder="请选择职位类别" required>
+							<el-option :label="p.label" :value="p.dictId" v-for="p in positionlist" :key="p.dictId"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="姓名" prop="name" required>
@@ -91,6 +88,12 @@
 			</div>
 
 		</div>
+		
+		
+		<!--<form method="post" action="/strong_portal_site/personalResume/savepersonalResume" @submit.prevent="comfirmAction" id="fileForm" enctype="multipart/form-data">
+			<input type="file" @change="getFile" name="uploadFile">
+			<input type="submit" value="提交">
+		</form>-->
 	</div>
 </template>
 
@@ -98,12 +101,15 @@
 	export default {
 		data() {
 			return {
+				Api:"http://192.168.0.209:8082/strong_portal_site/resumePhoto/",
 				imageUrl: '', //上传图片路径
+				loginName:JSON.parse(localStorage.getItem("user")).loginName,
 				quan: false,
 				jian: false,
 				experiencelist:[],//工作经验
 				educationlist:[],//学历
 				Salarylist:[],  //薪资
+				positionlist:[],//岗位数据展示
 				userid:JSON.parse(localStorage.getItem("user")).userId,
 				options: [{
 					value: '湖南省',
@@ -221,14 +227,21 @@
 						trigger: 'blur'
 					}],
 				},
-				id:this.$route.query.id
+				id:this.$route.query.id,
+				imgUrl: {},
+				photoUrl:''
 			};
 		},
 		created(){
 			this.getData();//获取下拉列表数据
 			this.getDataid();//获取需要编辑的id数据
+			
 		},
 		methods: {
+			getFile(e){
+		        console.log("e",e)
+		        this.imgUrl=e.target.files[0];
+		    },
 			//获得所需编辑的id数据
 			getDataid() {
 				if(this.id){
@@ -244,34 +257,19 @@
 						this.ruleForm.sex = data.sex;
 						this.ruleForm.phone = data.phone;
 						this.ruleForm.birth = data.birthday;
-						this.ruleForm.through = data.experienceLabel;
+						this.ruleForm.through = data.experience;
 						this.ruleForm.address = data.workRegion;
 						this.ruleForm.content = data.workExperience;
 						this.ruleForm.introduce = data.introduce;
 						this.ruleForm.salary = data.salary;
-						this.ruleForm.educat = data.educationLabel;
+						this.ruleForm.educat = data.education;
 						this.ruleForm.status = Boolean(data.status);
+						this.photoUrl = data.photoUrl;
+						console.log(res)
 						}
 					})
 				}
-				
 			},
-			//上传图片
-			 handleAvatarSuccess(res, file) {
-		        this.imageUrl = URL.createObjectURL(file.raw);
-		      },
-		      beforeAvatarUpload(file) {
-		        const isJPG = file.type === 'image/jpeg';
-		        const isLt2M = file.size / 1024 / 1024 < 2;
-		
-		        if (!isJPG) {
-		          this.$message.error('上传头像图片只能是 JPG 格式!');
-		        }
-		        if (!isLt2M) {
-		          this.$message.error('上传头像图片大小不能超过 2MB!');
-		        }
-		        return isJPG && isLt2M;
-		      },
 			deleadd(e){//添加多个工作区域时删除功能
 				this.ruleForm.area.splice(e,1);
 			},
@@ -288,40 +286,49 @@
 						this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
 						this.educationlist = res.data.resultObj.educationlist;  //学历要求
 						this.Salarylist = res.data.resultObj.Salarylist; //薪资待遇
+						this.positionlist = res.data.resultObj.positionlist; //职位
 					}
 				})
 			},
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if(valid) {
-						//提交数据到后台
-						this.$axios.post("/strong_portal_site/personalResume/savepersonalResume",{
-							createUser:this.userid,    			//用户id
-							resumeName:this.ruleForm.compname,	//简历名称
-							positionName:this.ruleForm.region,	//应聘岗位
-							name:this.ruleForm.name,			//姓名
-							sex:this.ruleForm.sex,				//性别
-							phone:this.ruleForm.phone,			//电话
-							birthday:this.ruleForm.birth,		//出生年月
-							freeTime:"",						//空闲时间
-							experience:this.ruleForm.through,	//工作经验
-							Salary:this.ruleForm.salary,		//薪资待遇
-							workRegion:this.ruleForm.area.join("、"),			//工作区域
-							workExperience:this.ruleForm.content,	//工作经历
-							introduce:	this.ruleForm.introduce,	//自我介绍
-							resumelType:"2"	,							//简历类型（1兼职，2全职）
-							status:	Number(this.ruleForm.status),		//是否公开（1公开 0不公开）
-							education:this.ruleForm.educat 				//学历要求
-						})
-						.then((res)=>{
-							if(res.data.resultCode == "1"){
-								this.$message({
-						          message: res.data.resultMessage,
-						          type: 'success'
-						        });
-						        this.$refs[formName].resetFields();
-							}
-						})
+					let formData = new FormData();
+					formData.append("resumeId","");
+					formData.append("imgUrl",this.imgUrl);
+					formData.append("createUser",this.userid);
+					formData.append("resumeName",this.ruleForm.compname);
+					formData.append("position",this.ruleForm.region);
+					formData.append("name",this.ruleForm.name);
+					formData.append("sex",this.ruleForm.sex);
+					formData.append("phone",this.ruleForm.phone);
+					formData.append("birthday",this.ruleForm.birth);
+					formData.append("freeTime","");
+					formData.append("experience",this.ruleForm.through);
+					formData.append("salary",this.ruleForm.salary);
+					formData.append("workRegion",this.ruleForm.area.join("、"));
+					formData.append("workExperience",this.ruleForm.content);
+					formData.append("introduce",this.ruleForm.introduce);
+					formData.append("resumelType","2");
+					formData.append("status",Number(this.ruleForm.status));
+					formData.append("education",this.ruleForm.educat);
+				
+				const instance = this.$axios.create({
+		          withCredentials: true
+		         }) 
+				// 添加请求头
+		        instance.post('/strong_portal_site/personalResume/savepersonalResume', formData)
+		          .then(res => {
+		          if(res.data.resultCode == "1"){
+						this.$message({
+				          message: res.data.resultMessage,
+				          type: 'success'
+				        });
+				        this.$refs[formName].resetFields();
+				        console.log(res)
+					}
+		          })
+		        console.log('formData.get(\'imgUrl\')=',formData.get('imgUrl'),this.userid)
 					} else {
 						this.$message({
 				          message: '保存失败，数据错误',
@@ -352,7 +359,30 @@
 </script>
 
 <style scoped="">
-
+.input-img{
+	text-align: center;
+	width: 50%;
+	background: #fff;
+	position: relative;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+.input-img input{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	opacity: 0;
+}
+.input-img img{
+	position: absolute;
+	right: -150px;
+	top: 0;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	border:1px solid #ccc;
+}
 .spanadd{
 	background: #eee;
 	margin: 2px;

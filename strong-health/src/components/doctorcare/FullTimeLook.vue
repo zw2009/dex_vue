@@ -60,10 +60,8 @@
 				})
 				.then((res)=>{
 					if(res.data.resultCode =="1"){
-					
 						this.ruleForm = res.data.resultObj.personalResume[0];
 					}
-					
 				})
 			},
 			getId(id){

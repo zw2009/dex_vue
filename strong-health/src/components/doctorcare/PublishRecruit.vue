@@ -9,10 +9,7 @@
 					</el-form-item>
 					<el-form-item label="职位类别" prop="region">
 						<el-select v-model="ruleForm.region" placeholder="请选择职位类别" required>
-							<el-option label="医生" value="医生"></el-option>
-							<el-option label="护士" value="护士"></el-option>
-							<el-option label="药剂师" value="药剂师"></el-option>
-							<el-option label="药房" value="药房"></el-option>
+							<el-option :label="p.label" :value="p.dictId" v-for="p in positionlist" :key="p.dictId"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="招聘人数" prop="num" required>
@@ -114,7 +111,7 @@
 				types: Types,
 				quan:false,
 				jian:false,
-				positionlist:[],//岗位职责数据展示
+				positionlist:[],//岗位数据展示
 				experiencelist:[],//工作经验展示
 				educationlist:[],//学历要求
 				Salarylist:[], //薪资待遇
@@ -268,7 +265,7 @@
 						//this.ruleForm.area[1] = data.city;    //工作地点 市
 						this.ruleForm.address = data.address;    //工作地点 区
 						this.ruleForm.name = data.contactsName;   //联系人
-//						this.user.userId = data.crateUser;       //发布人id从系统取
+//						this.user.userId = data.createUser;       //发布人id从系统取
 						this.ruleForm.phone = data.phone;        //联系电话
 						this.ruleForm.content = data.workContent; //工作内容
 						this.ruleForm.ask = data.requirements;    //职位要求
@@ -290,6 +287,7 @@
 						this.experiencelist = res.data.resultObj.experiencelist;  //工作经验
 						this.educationlist = res.data.resultObj.educationlist;  //学历要求
 						this.Salarylist = res.data.resultObj.Salarylist; //薪资待遇
+						this.positionlist = res.data.resultObj.positionlist; //职位
 					}
 				})
 			},
@@ -299,7 +297,7 @@
 						this.$axios.post("/strong_portal_site/recruitInfo/saveRecruitInfoList",{
 							recruitId :this.getid,
 							companyName:this.ruleForm.compname, //公司名称
-							positionName:this.ruleForm.region,    //招聘岗位
+							position:this.ruleForm.region,    //招聘岗位
 							recruitNum:this.ruleForm.num,     //招聘人数
 							recruitType:this.ruleForm.pullprat,//招聘类型全职、兼职
 							experience:this.ruleForm.through,  //工作经验
@@ -309,7 +307,7 @@
    							area:this.ruleForm.area[2], //区
    							address:this.ruleForm.address,    //详细地址
 							contactsName:this.ruleForm.name,   //联系人
-							crateUser:this.user.userId,        //发布人id从系统取
+							createUser:this.user.userId,        //发布人id从系统取
 							phone:this.ruleForm.phone,         //联系电话
 							workContent:this.ruleForm.content, //工作内容
 							requirements:this.ruleForm.ask,    //职位要求
@@ -325,6 +323,7 @@
 						          message: res.data.resultMessage,
 						          type: 'success'
 						       });
+						       this.$refs[formName].resetFields();
 							}
 						});
 					} else {

@@ -3,8 +3,8 @@
 		<div class="reslist">
 			<!--搜索简历-->
 			<div class="search" style="display: flex;margin: 0 10px">
-				<input type="text" class="form-control" placeholder="请输入搜索简历">
-				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" >搜索</button>
+				<input type="text" class="form-control" placeholder="请输入搜索简历" v-model="seach" @keyup="getDate">
+				<button class="btn btn-warning" type="submit" style="width: 100px;" >搜索</button>
 			</div>
 			<ul>
 				<li v-for="r in resumes" @click="linktime(r.resumeId)">
@@ -13,7 +13,7 @@
 						<img ref="img" :src="r.imgUrl"/>
 						<dl>
 							<dt>{{r.name}}<em>{{r.sex}}</em><em>{{GetDateStr(r.birthday)}}</em><em>{{r.experienceLabel}}</em><em>{{r.educationLabel}}</em></dt>
-							<dd>期望职位：<span>{{r.position}}</span></dd>
+							<dd>期望职位：<span>{{r.positionLabel}}</span></dd>
 							<dd>期望地点：{{r.workRegion}}</dd>
 						</dl>
 					</div>
@@ -22,7 +22,7 @@
 						<dl>
 							<dt>两周内：</dt>
 							<dd>被浏览 <strong> 136 </strong> 次</dd>
-							<dd>主动投递 <strong> 0 </strong> 个职位</dd>
+							<!--<dd>主动投递 <strong> 0 </strong> 个职位</dd>-->
 						</dl>
 					</div>
 				</li>
@@ -48,8 +48,8 @@
 				resumes:[],
 				total:0,
 				pageSize:5,
-				currentPage:1
-				
+				currentPage:1,
+				seach:''
 			}
 		},
 		created(){
@@ -59,12 +59,13 @@
 		methods:{
 			//跳转简历详情
 			linktime(id){
-				this.$router.push({
-					name:'fulltimelook',
+				let rouerData = this.$router.resolve({
+					name:'fullpartdetails',
 					query:{
 						id:id
 					}
 				});
+				window.open(rouerData.href,"_blank");
 			},
 			handleCurrentChange(val){
 				this.changeDate(val);
@@ -107,13 +108,13 @@
 					status:"1",
 					pageNo:this.currentPage,
 					pageSize:this.pageSize,
-					resumelType:"2"
+					resumelType:"2",
+					selectName:this.seach
 				})
 				.then((res)=>{
 					if(res.data.resultCode == "1"){
 						this.total = res.data.resultObj.totalSize;
 						this.resumes = res.data.resultObj.personalResumeList;
-						console.log(res.data.resultObj)
 					}
 				})
 			}

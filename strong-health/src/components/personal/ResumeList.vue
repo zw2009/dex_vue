@@ -20,10 +20,10 @@
 					<tbody class="timelook">
 						<tr v-for="r in resumes" @click="tolink(r.resumelType,r.resumeId)">
 							<th scope="row">{{r.name}}</th>
-							<td>{{r.position}}</td>
+							<td>{{r.positionLabel}}</td>
 							<td>{{r.phone}}</td>
 							<td>{{r.experienceLabel}}</td>
-							<td>{{r.salary}}</td>
+							<td>{{r.salaryLabel}}</td>
 							<th class="full-part">{{partfull(r.resumelType)}}</th>
 							<th class="text-danger deletem" @click.stop="deleteresume(r.resumeId)">删除</th>
 						</tr>
@@ -49,14 +49,30 @@ export default{
 	},
 	methods:{
 		deleteresume(id){//删除当前简历
-			console.log(id);
-			this.$axios.post("/strong_portal_site/personalResume/deletepersonalResume",{
-				resumeId:id,
-				createUser:this.uesr
-			})
-			.then((res)=>{
-				console.log(res)
-			})
+			this.$confirm('此操作将永久删除该条简历, 是否继续?', '提示', {
+	          confirmButtonText: '确定',
+	          cancelButtonText: '取消',
+	          type: 'warning'
+	        }).then(() => {
+	          this.$axios.post("/strong_portal_site/personalResume/deletepersonalResume",{
+					resumeId:id,
+					createUser:this.uesr
+				})
+				.then((res)=>{
+					if(res.data.resultCode =='1'){
+						this.$message({
+				            type: 'success',
+				            message: '删除成功!'
+				          });
+				        this.getData();
+					}
+				})
+	        }).catch(() => {
+	          this.$message({
+	            type: 'info',
+	            message: '已取消删除'
+	          });          
+	        });
 		},
 		partfull(type){//切换显示全职兼职
 			if(type == "2"){
@@ -76,7 +92,6 @@ export default{
 					this.resumes = res.data.resultObj.personalResume;
 					console.log(res.data.resultObj.personalResume)
 				}
-				
 			})
 		},
 		tolink(parful,id){

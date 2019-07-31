@@ -17,8 +17,8 @@
 				<!--发布右边-->
 				<div class="rigtit leftit">
 					<div class="showpop">
-						<p class="text-danger"><strong>{{a.salaryLabel}}</strong></p>
-						<a class="apply" href="javascript:;">近两月申请：<strong class="text-danger">20</strong>人</a>
+						<p class="text-danger" style="padding-top: 20px;"><strong>{{a.salaryLabel}}</strong></p>
+						<!--<a class="apply" href="javascript:;">近两月申请：<strong class="text-danger">20</strong>人</a>-->
 					</div>
 					<div class="delete">
 						<strong class="text-danger reach" style="line-height: 80px;" @click="deletData(a.id)">刪除</strong>
@@ -87,7 +87,7 @@
 			},
 			getpage(val){
 				this.$axios.post("/strong_portal_site/position/selectMyApplyList",{
-					crateUser:this.userId,
+					createUser:this.userId,
 					pageNo:val,
 					pageSize:this.pageSize
 					
@@ -100,7 +100,7 @@
 			},
 			getData(){
 				this.$axios.post("/strong_portal_site/position/selectMyApplyList",{
-					crateUser:this.userId,
+					createUser:this.userId,
 					pageNo:this.currentPage,
 					pageSize:this.pageSize
 					

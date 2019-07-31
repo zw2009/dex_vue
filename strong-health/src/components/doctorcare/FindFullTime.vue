@@ -2,19 +2,19 @@
 	<div class="find-full">
 		<!--搜索职位-->
 			<div class="search" style="display: flex;">
-				<input type="text" class="form-control" v-model="seach" placeholder="请输入搜索职位" @change="seschfulls">
+				<input type="text" class="form-control" v-model="seach" placeholder="请输入搜索职位" @keyup="seschfulls">
 				<button class="btn btn-warning" type="submit" id="seach" style="width: 100px;" @click="seschfulls">搜索</button>
 			</div>
 		<div class="bs-example" data-example-id="hoverable-table">
 				 <el-table
 				   :data="fulls"
 				   stripe
-
+					
 				    style="width: 100%">
 		                <el-table-column
 		                  prop="positionLabel"
 		                  label="职位名"
-		                  width="180">
+		                  width="140">
 		                </el-table-column>
 		                 <el-table-column
 		                  prop="companyName"
@@ -22,7 +22,8 @@
 		                  width="width">
 		                </el-table-column>
 		                 <el-table-column
-		                  prop="address"
+		                  prop="area"
+		                  :formatter="cityarea"
 		                  label="工作地点"
 		                  width="180">
 		                </el-table-column>
@@ -38,10 +39,18 @@
 		                  label="发布时间"
 		                  width="180">
 		                </el-table-column>
+		                <el-table-column
+		                  prop=""
+		                  label="查看"
+		                  width="70">
+		                  <template slot-scope="scope">
+		                  	<el-button type="primary" size="mini" @click.stop="timedestails(scope.row)">详情</el-button>
+					      </template>
+		                </el-table-column>
 		                <el-table-column v-if="application"
 		                  prop=""
 		                  label="职位申请" 
-		                  width="180">
+		                  width="120">
 		                  <template slot-scope="scope">
 		                  	<el-button type="primary" size="mini" @click.stop="changprop(scope.row)">投递简历</el-button>
 					      </template>
@@ -72,10 +81,9 @@
 						<li>{{r.name}}</li>
 						<li>{{r.phone}}</li>
 						<li>{{r.experienceLabel}}</li>
-						<li>{{r.position}}</li>
-						<li><el-button type="primary" plain size="small" @click="comapp(r.resumeId)">确认投递</el-button></li>
+						<li>{{r.positionLabel}}</li>
+						<li><el-button type="primary" plain size="small" :disable="buttdis" @click="comapp(r.resumeId)">确认投递</el-button></li>
 					</ul>
-					
 				</div>
 				  
 		</div>
@@ -98,18 +106,34 @@
 				application:false,
 				width:"300",
 				user:JSON.parse(localStorage.getItem("user")).userTyp,
-				userId:JSON.parse(localStorage.getItem("user")).userId
+				userId:JSON.parse(localStorage.getItem("user")).userId,
+				buttdis:false
 			}
 		},
 		methods:{
+			timedestails(row){//获取此条id的详情
+				let routeData = this.$router.resolve({
+					name:'timedetails',
+					query:{
+						id:row.recruitId
+					}
+				});
+				window.open(routeData.href,"blank");
+				
+			},
+			cityarea(row){//城市和区域显示
+				return row.city+"-"+row.area;
+			},
 			comapp(id){
+				
 				this.$axios.post("/strong_portal_site/position/saveApplyInfo",{
-					crateUser:this.userId,  //用户id
+					createUser:this.userId,  //用户id
 					recruitId:this.recruitId, //当前招聘信息id
 					resumeId:id    //当前简历id
 				})
 				.then((res)=>{
 					if(res.data.resultCode = "1"){
+						this.buttdis = true;
 						this.$message({
 				          message: res.data.resultMessage,
 				          type: 'success'
@@ -167,7 +191,7 @@
 					status : 1, //状态
 					pageNo:this.currentPage ,
 					pageSize : this.pageSize,
-//					positionName:this.seach
+					selectName:this.seach
 				})
 				.then((res)=>{
 					if(res.data.resultCode == "1"){
